@@ -1,0 +1,18 @@
+#alla filer med denna endelsen ska ignoreras
+*.log
+*.exe
+*.dll
+*.class
+*.o
+*.tmp
+*.txt
+*.env
+*.config
+
+# Alla delar som gäller react
+.min.js
+node_modules/
+build/
+dist/
+*.vscode
+*.idea

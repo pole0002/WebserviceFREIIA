@@ -10,7 +10,8 @@ using FREIIA_API.Models;
 
 namespace FREIIA_API.Controllers
 {
-    [Route("api/[controller]")]
+    // Här har det tidigare stått " [Route("api/[controller]")]"
+    [Route("[controller]")]
     [ApiController]
     public class ChartsController : ControllerBase
     {

@@ -2,10 +2,11 @@
 {
     public class ExpertiseParticipant
     {
-        public int ExpertiseId { get; set; }
+        public int Id { get; set; }
         public Expertise Expertise { get; set; }
-        public int ParticipantId { get; set; }
+        public int ExpertiseId { get; set; }
         public Participant Participant { get; set; }
+        public int ParticipantId { get; set; }
         public bool IsMainExpertise { get; set; }
     }
 }

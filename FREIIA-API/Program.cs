@@ -5,14 +5,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // SQLSERVER
-// Add services to the container.
-//builder.Services.AddDbContext<FREIIAContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//Add services to the container.
+builder.Services.AddDbContext<FREIIAContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 // SQLITE
-builder.Services.AddDbContext<FREIIAContext>(options =>
-    options.UseSqlite("Datasource = FREIIA.db"));
+//builder.Services.AddDbContext<FREIIAContext>(options =>
+//    options.UseSqlite("Datasource = FREIIA.db"));
 
 
 builder.Services.AddControllers();

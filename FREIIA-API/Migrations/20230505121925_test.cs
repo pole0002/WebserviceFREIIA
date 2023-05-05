@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FREIIA_API.Migrations
 {
-    public partial class Test : Migration
+    public partial class test : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,11 +13,11 @@ namespace FREIIA_API.Migrations
                 name: "Charts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Password = table.Column<string>(type: "TEXT", nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -25,40 +25,40 @@ namespace FREIIA_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Color",
+                name: "Colors",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    RGBA = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RGBA = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Color", x => x.Id);
+                    table.PrimaryKey("PK_Colors", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "LineStyle",
+                name: "LineStyles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Style = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Style = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LineStyle", x => x.Id);
+                    table.PrimaryKey("PK_LineStyles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "ParticipantContactInfos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
-                    Email = table.Column<string>(type: "TEXT", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -69,19 +69,19 @@ namespace FREIIA_API.Migrations
                 name: "Expertises",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    ColorId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ColorId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Expertises", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Expertises_Color_ColorId",
+                        name: "FK_Expertises_Colors_ColorId",
                         column: x => x.ColorId,
-                        principalTable: "Color",
+                        principalTable: "Colors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -90,19 +90,19 @@ namespace FREIIA_API.Migrations
                 name: "Roles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    ColorId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ColorId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Roles_Color_ColorId",
+                        name: "FK_Roles_Colors_ColorId",
                         column: x => x.ColorId,
-                        principalTable: "Color",
+                        principalTable: "Colors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -111,11 +111,11 @@ namespace FREIIA_API.Migrations
                 name: "Zones",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    ColorId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ChartId = table.Column<int>(type: "INTEGER", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ColorId = table.Column<int>(type: "int", nullable: false),
+                    ChartId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -126,9 +126,9 @@ namespace FREIIA_API.Migrations
                         principalTable: "Charts",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Zones_Color_ColorId",
+                        name: "FK_Zones_Colors_ColorId",
                         column: x => x.ColorId,
-                        principalTable: "Color",
+                        principalTable: "Colors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -137,24 +137,24 @@ namespace FREIIA_API.Migrations
                 name: "ConnectionStyles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ColorId = table.Column<int>(type: "INTEGER", nullable: false),
-                    LineStyleId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ColorId = table.Column<int>(type: "int", nullable: false),
+                    LineStyleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ConnectionStyles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ConnectionStyles_Color_ColorId",
+                        name: "FK_ConnectionStyles_Colors_ColorId",
                         column: x => x.ColorId,
-                        principalTable: "Color",
+                        principalTable: "Colors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ConnectionStyles_LineStyle_LineStyleId",
+                        name: "FK_ConnectionStyles_LineStyles_LineStyleId",
                         column: x => x.LineStyleId,
-                        principalTable: "LineStyle",
+                        principalTable: "LineStyles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -163,12 +163,12 @@ namespace FREIIA_API.Migrations
                 name: "Groups",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    ColorId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ChartId = table.Column<int>(type: "INTEGER", nullable: true),
-                    ZoneId = table.Column<int>(type: "INTEGER", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ColorId = table.Column<int>(type: "int", nullable: false),
+                    ChartId = table.Column<int>(type: "int", nullable: true),
+                    ZoneId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -179,9 +179,9 @@ namespace FREIIA_API.Migrations
                         principalTable: "Charts",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Groups_Color_ColorId",
+                        name: "FK_Groups_Colors_ColorId",
                         column: x => x.ColorId,
-                        principalTable: "Color",
+                        principalTable: "Colors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -195,16 +195,16 @@ namespace FREIIA_API.Migrations
                 name: "Participants",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", nullable: false),
-                    FromCompany = table.Column<string>(type: "TEXT", nullable: true),
-                    RoleId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ContactInfoId = table.Column<int>(type: "INTEGER", nullable: true),
-                    ChartId = table.Column<int>(type: "INTEGER", nullable: true),
-                    GroupId = table.Column<int>(type: "INTEGER", nullable: true),
-                    ZoneId = table.Column<int>(type: "INTEGER", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FromCompany = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    ContactInfoId = table.Column<int>(type: "int", nullable: true),
+                    ChartId = table.Column<int>(type: "int", nullable: true),
+                    GroupId = table.Column<int>(type: "int", nullable: true),
+                    ZoneId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -241,16 +241,16 @@ namespace FREIIA_API.Migrations
                 name: "Connections",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    ConnectionStyleId = table.Column<int>(type: "INTEGER", nullable: false),
-                    FirstZoneId = table.Column<int>(type: "INTEGER", nullable: true),
-                    SecondZoneId = table.Column<int>(type: "INTEGER", nullable: true),
-                    FirstGroupId = table.Column<int>(type: "INTEGER", nullable: true),
-                    SecondGroupId = table.Column<int>(type: "INTEGER", nullable: true),
-                    FirstParticipantId = table.Column<int>(type: "INTEGER", nullable: true),
-                    SecondParticipantId = table.Column<int>(type: "INTEGER", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConnectionStyleId = table.Column<int>(type: "int", nullable: false),
+                    FirstZoneId = table.Column<int>(type: "int", nullable: true),
+                    SecondZoneId = table.Column<int>(type: "int", nullable: true),
+                    FirstGroupId = table.Column<int>(type: "int", nullable: true),
+                    SecondGroupId = table.Column<int>(type: "int", nullable: true),
+                    FirstParticipantId = table.Column<int>(type: "int", nullable: true),
+                    SecondParticipantId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -294,28 +294,27 @@ namespace FREIIA_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ExpertiseParticipants",
+                name: "ExpertiseParticipant",
                 columns: table => new
                 {
-                    ExpertiseId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ParticipantId = table.Column<int>(type: "INTEGER", nullable: false),
-                    IsMainExpertise = table.Column<bool>(type: "INTEGER", nullable: false)
+                    ExpertisesId = table.Column<int>(type: "int", nullable: false),
+                    ParticipantsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ExpertiseParticipants", x => new { x.ExpertiseId, x.ParticipantId });
+                    table.PrimaryKey("PK_ExpertiseParticipant", x => new { x.ExpertisesId, x.ParticipantsId });
                     table.ForeignKey(
-                        name: "FK_ExpertiseParticipants_Expertises_ExpertiseId",
-                        column: x => x.ExpertiseId,
+                        name: "FK_ExpertiseParticipant_Expertises_ExpertisesId",
+                        column: x => x.ExpertisesId,
                         principalTable: "Expertises",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ExpertiseParticipants_Participants_ParticipantId",
-                        column: x => x.ParticipantId,
+                        name: "FK_ExpertiseParticipant_Participants_ParticipantsId",
+                        column: x => x.ParticipantsId,
                         principalTable: "Participants",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(
@@ -364,9 +363,9 @@ namespace FREIIA_API.Migrations
                 column: "LineStyleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExpertiseParticipants_ParticipantId",
-                table: "ExpertiseParticipants",
-                column: "ParticipantId");
+                name: "IX_ExpertiseParticipant_ParticipantsId",
+                table: "ExpertiseParticipant",
+                column: "ParticipantsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Expertises_ColorId",
@@ -435,7 +434,7 @@ namespace FREIIA_API.Migrations
                 name: "Connections");
 
             migrationBuilder.DropTable(
-                name: "ExpertiseParticipants");
+                name: "ExpertiseParticipant");
 
             migrationBuilder.DropTable(
                 name: "ConnectionStyles");
@@ -447,7 +446,7 @@ namespace FREIIA_API.Migrations
                 name: "Participants");
 
             migrationBuilder.DropTable(
-                name: "LineStyle");
+                name: "LineStyles");
 
             migrationBuilder.DropTable(
                 name: "Groups");
@@ -465,7 +464,7 @@ namespace FREIIA_API.Migrations
                 name: "Charts");
 
             migrationBuilder.DropTable(
-                name: "Color");
+                name: "Colors");
         }
     }
 }

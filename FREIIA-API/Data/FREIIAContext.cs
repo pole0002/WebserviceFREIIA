@@ -14,32 +14,36 @@ namespace FREIIA_API.Data
         public DbSet<ParticipantContactInfo> ParticipantContactInfos { get; set; }
         public DbSet<Connection> Connections { get; set; }
         public DbSet<ConnectionStyle> ConnectionStyles { get; set; }
-        public DbSet<ExpertiseParticipant> ExpertiseParticipants { get; set; }
+        public DbSet<Color> Colors { get; set; }
+        public DbSet<LineStyle> LineStyles { get; set; }
+
+        //public DbSet<ExpertiseParticipant> ExpertiseParticipants { get; set; }
         public FREIIAContext(DbContextOptions options) : base(options)
         {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             modelBuilder.Entity<ExpertiseParticipant>()
-                .HasKey(ep => new { ep.ExpertiseId, ep.ParticipantId });
+            .HasKey(ep => new { ep.ExpertiseId, ep.ParticipantId });
 
             modelBuilder.Entity<ExpertiseParticipant>()
                 .HasOne(ep => ep.Expertise)
                 .WithMany(e => e.ExpertiseParticipants)
-                .HasForeignKey(ep => ep.ExpertiseId);
+                .HasForeignKey(ep => ep.ExpertiseId)
+                .OnDelete(DeleteBehavior.Cascade); // added Cascade
 
             modelBuilder.Entity<ExpertiseParticipant>()
                 .HasOne(ep => ep.Participant)
                 .WithMany(p => p.ExpertiseParticipants)
-                .HasForeignKey(ep => ep.ParticipantId);
+                .HasForeignKey(ep => ep.ParticipantId)
+                .OnDelete(DeleteBehavior.NoAction); // added Cascade
 
 
             modelBuilder.Entity<Zone>()
-                .HasMany(z => z.ConnectionsAsFirstZone)
-                .WithOne(c => c.FirstZone)
-                .HasForeignKey(c => c.FirstZoneId);
+             .HasMany(z => z.ConnectionsAsFirstZone)
+             .WithOne(c => c.FirstZone)
+             .HasForeignKey(c => c.FirstZoneId);
 
             modelBuilder.Entity<Zone>()
                 .HasMany(z => z.ConnectionsAsSecondZone)
@@ -72,7 +76,6 @@ namespace FREIIA_API.Data
                 .WithOne(c => c.SecondParticipant)
                 .HasForeignKey(c => c.SecondParticipantId)
                 .IsRequired(false);
-
 
             base.OnModelCreating(modelBuilder);
         }

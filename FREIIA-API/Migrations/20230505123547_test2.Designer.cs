@@ -4,6 +4,7 @@ using FREIIA_API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FREIIA_API.Migrations
 {
     [DbContext(typeof(FREIIAContext))]
-    partial class FREIIAContextModelSnapshot : ModelSnapshot
+    [Migration("20230505123547_test2")]
+    partial class test2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,9 +179,6 @@ namespace FREIIA_API.Migrations
 
                     b.Property<int>("Id")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsMainExpertise")
-                        .HasColumnType("bit");
 
                     b.HasKey("ExpertiseId", "ParticipantId");
 

@@ -3,9 +3,17 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+// SQLSERVER
 // Add services to the container.
+//builder.Services.AddDbContext<FREIIAContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+// SQLITE
 builder.Services.AddDbContext<FREIIAContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite("Datasource = FREIIA.db"));
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -17,7 +25,6 @@ builder.Services.AddCors(options => options.AddPolicy("Policy", builder =>
             .AllowAnyHeader()));
 
 builder.Services.AddSwaggerGen();
-
 
 var app = builder.Build();
 

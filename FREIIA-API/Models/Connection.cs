@@ -5,7 +5,7 @@
         public int Id { get; set; }
         public string Name { get; set; }
         public ConnectionStyle ConnectionStyle { get; set; }
-
+        
         public int? FirstZoneId { get; set; }
         public Zone? FirstZone { get; set; }
         public int? SecondZoneId { get; set; }

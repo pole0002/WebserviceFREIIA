@@ -14,6 +14,7 @@ namespace FREIIA_API.Data
         public DbSet<ParticipantContactInfo> ParticipantContactInfos { get; set; }
         public DbSet<Connection> Connections { get; set; }
         public DbSet<ConnectionStyle> ConnectionStyles { get; set; }
+        public DbSet<ExpertiseParticipant> ExpertiseParticipants { get; set; }
         public FREIIAContext(DbContextOptions options) : base(options)
         {
         }
@@ -21,10 +22,24 @@ namespace FREIIA_API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
+            modelBuilder.Entity<ExpertiseParticipant>()
+                .HasKey(ep => new { ep.ExpertiseId, ep.ParticipantId });
+
+            modelBuilder.Entity<ExpertiseParticipant>()
+                .HasOne(ep => ep.Expertise)
+                .WithMany(e => e.ExpertiseParticipants)
+                .HasForeignKey(ep => ep.ExpertiseId);
+
+            modelBuilder.Entity<ExpertiseParticipant>()
+                .HasOne(ep => ep.Participant)
+                .WithMany(p => p.ExpertiseParticipants)
+                .HasForeignKey(ep => ep.ParticipantId);
+
+
             modelBuilder.Entity<Zone>()
-        .HasMany(z => z.ConnectionsAsFirstZone)
-        .WithOne(c => c.FirstZone)
-        .HasForeignKey(c => c.FirstZoneId);
+                .HasMany(z => z.ConnectionsAsFirstZone)
+                .WithOne(c => c.FirstZone)
+                .HasForeignKey(c => c.FirstZoneId);
 
             modelBuilder.Entity<Zone>()
                 .HasMany(z => z.ConnectionsAsSecondZone)

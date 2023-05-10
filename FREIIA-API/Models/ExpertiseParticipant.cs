@@ -2,7 +2,6 @@
 {
     public class ExpertiseParticipant
     {
-        public int Id { get; set; }
         public Expertise Expertise { get; set; }
         public int ExpertiseId { get; set; }
         public Participant Participant { get; set; }

@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 // SQLSERVER
 //Add services to the container.
 builder.Services.AddDbContext<FREIIAContext>(options =>

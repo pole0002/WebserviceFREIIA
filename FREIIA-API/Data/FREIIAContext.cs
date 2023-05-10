@@ -24,9 +24,11 @@ namespace FREIIA_API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Create shared primarykey in expertiseparticipant table.
             modelBuilder.Entity<ExpertiseParticipant>()
             .HasKey(ep => new { ep.ExpertiseId, ep.ParticipantId });
 
+            //Define foreign key constraints for expertiseparticipant table.
             modelBuilder.Entity<ExpertiseParticipant>()
                 .HasOne(ep => ep.Expertise)
                 .WithMany(e => e.ExpertiseParticipants)
@@ -37,8 +39,7 @@ namespace FREIIA_API.Data
                 .HasOne(ep => ep.Participant)
                 .WithMany(p => p.ExpertiseParticipants)
                 .HasForeignKey(ep => ep.ParticipantId)
-                .OnDelete(DeleteBehavior.NoAction); // added Cascade
-
+                .OnDelete(DeleteBehavior.NoAction); // Should also be cascade but threw error in migration when i tried this.
 
             modelBuilder.Entity<Zone>()
              .HasMany(z => z.ConnectionsAsFirstZone)

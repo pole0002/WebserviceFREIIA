@@ -29,7 +29,11 @@ namespace FREIIA_API.Controllers
           {
               return NotFound();
           }
-            return await _context.Participants.ToListAsync();
+            return await _context.Participants
+                .Include(p=>p.Role)
+                //.ThenInclude(r=>r.Color)
+                .Include(p=>p.ContactInfo)
+                .ToListAsync();
         }
 
         // GET: api/Participants/5

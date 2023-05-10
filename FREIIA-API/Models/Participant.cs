@@ -19,13 +19,14 @@
                 return $"{FirstName} {LastName}";
             }
         }
+        // Bortkommenterad för att den ger fel när man vill getta Participants
 
-        public Color BackgroundColor
-        {
-            get
-            {
-                return Role.Color;
-            }
-        }
+        //public Color BackgroundColor
+        //{
+        //    get
+        //    {
+        //        return Role.Color;
+        //    }
+        //}
     }
 }

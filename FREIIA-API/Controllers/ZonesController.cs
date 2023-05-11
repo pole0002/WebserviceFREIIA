@@ -105,9 +105,12 @@ namespace FREIIA_API.Controllers
                 return NotFound();
             }
             var zone = await _context.Zones.FindAsync(id);
-            if (zone == null)
+            if (zone != null)
             {
-                return NotFound();
+                //foreach (var group in zone.Groups)
+                //{
+                //    group.ZoneId = null;
+                //}
             }
 
             _context.Zones.Remove(zone);

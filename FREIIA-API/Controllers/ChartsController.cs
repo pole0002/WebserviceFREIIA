@@ -98,6 +98,7 @@ namespace FREIIA_API.Controllers
         }
 
         // DELETE: api/Charts/5
+        // Here we need to delete Zones, Groups, participants and include all code that ranges to the tables 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteChart(int id)
         {

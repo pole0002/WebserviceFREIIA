@@ -46,6 +46,7 @@ namespace FREIIA_API.Controllers
           }
             var participant = await _context.Participants.FindAsync(id);
 
+
             if (participant == null)
             {
                 return NotFound();
@@ -108,10 +109,36 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
-            var participant = await _context.Participants.FindAsync(id);
-            if (participant == null)
+            //Gets participant info and also info från ParticipantContactInfo
+            var participant = _context.Participants.Include(p => p.ContactInfo).SingleOrDefault(p => p.Id == id);
+            if (participant != null)
             {
-                return NotFound();
+                // puts contactinfo for participant in a separate variable
+                var contactInfo = participant.ContactInfo;
+                if(contactInfo !=null)
+                {
+                    // removes the connected row in ParticipantContactinfo
+                    _context.ParticipantContactInfos.Remove(contactInfo);
+                }
+
+                // finds expertises connected to the specific participant
+                var deleteExpertiseParticipantRow = _context.ExpertiseParticipant.Where(ep => ep.ParticipantId == id);
+                // deletes the connection of the expertise for a participant not the expertise itself
+                if(deleteExpertiseParticipantRow != null)
+                {
+                    _context.ExpertiseParticipant.RemoveRange(deleteExpertiseParticipantRow);
+                }
+                
+
+                // finds the connections that need to be deleted where the participant is included atm
+                var deleteConnections = _context.Connections
+               .Where(c => c.FirstParticipantId == participant.Id || c.SecondParticipantId == participant.Id);
+                // deletes the connection
+                if(deleteConnections != null)
+                {
+                    _context.Connections.RemoveRange(deleteConnections);
+                }
+                
             }
 
             _context.Participants.Remove(participant);

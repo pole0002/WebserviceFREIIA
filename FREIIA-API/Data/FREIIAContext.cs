@@ -78,6 +78,7 @@ namespace FREIIA_API.Data
                 .HasForeignKey(c => c.SecondParticipantId)
                 .IsRequired(false);
 
+
             base.OnModelCreating(modelBuilder);
         }
 

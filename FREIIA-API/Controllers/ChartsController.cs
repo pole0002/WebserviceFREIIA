@@ -111,7 +111,35 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
+            //var targetChart = _context.Charts.Include(c => c.Zones).Include(c => c.Groups).Include(c => c.Participants).SingleOrDefault(c => c.Id == chartId);
+            //if (targetChart != null)
+            //{
+            //    // Removes all zones
+            //    if (targetChart.Zones != null && targetChart.Zones.Count > 0)
+            //    {
+            //        _context.Zones.RemoveRange(targetChart.Zones);
+            //    }
 
+            //    // Removes all groups
+            //    if (targetChart.Groups != null && targetChart.Groups.Count > 0)
+            //    {
+            //        _context.Groups.RemoveRange(targetChart.Groups);
+            //    }
+
+            //    // Removes all participants and their contact info
+            //    if (targetChart.Participants != null && targetChart.Participants.Count > 0)
+            //    {
+            //        foreach (var participant in targetChart.Participants)
+            //        {
+            //            var contactInfo = participant.ContactInfo;
+            //            if (contactInfo != null)
+            //            {
+            //                _context.ParticipantContactInfos.Remove(contactInfo);
+            //            }
+            //        }
+            //        _context.Participants.RemoveRange(targetChart.Participants);
+            //    }
+            //}
             _context.Charts.Remove(chart);
             await _context.SaveChangesAsync();
 

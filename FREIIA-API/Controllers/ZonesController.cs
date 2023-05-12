@@ -109,9 +109,10 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
+            int defaultZoneId = 0;
             foreach(var group in zone.Groups)
             {
-                group.Id = 0;
+                group.Id = defaultZoneId;
             }
 
             _context.Zones.Remove(zone);

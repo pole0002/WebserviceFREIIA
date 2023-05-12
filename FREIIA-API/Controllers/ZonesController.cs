@@ -104,13 +104,14 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
-            var zone = await _context.Zones.FindAsync(id);
-            if (zone != null)
+            var zone = _context.Zones.Find(id);
+            if (zone == null)
             {
-                //foreach (var group in zone.Groups)
-                //{
-                //    group.ZoneId = null;
-                //}
+                return NotFound();
+            }
+            foreach(var group in zone.Groups)
+            {
+                group.Id = 0;
             }
 
             _context.Zones.Remove(zone);

@@ -104,15 +104,20 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
-            var zone = _context.Zones.Find(id);
+            var zone = _context.Zones.Include(g=>g.Groups)
+            .Include(p=>p.Participants)   
+            .SingleOrDefault(g=> g.Id == id);
             if (zone == null)
             {
                 return NotFound();
             }
-            int defaultZoneId = 0;
-            foreach(var group in zone.Groups)
+            foreach (var group in zone.Groups)
             {
-                group.Id = defaultZoneId;
+                group.ZoneId = null;
+            }
+            foreach (var participants in zone.Participants)
+            {
+                participants.ZoneId = null;
             }
 
             _context.Zones.Remove(zone);

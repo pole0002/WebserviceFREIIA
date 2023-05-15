@@ -3,9 +3,11 @@
     public class Group
     {
         public int Id { get; set; }
+        public int ChartId { get; set; }
+        public int? ZoneId { get; set; }
         public string Name { get; set; }
         public Color Color { get; set; }
-        public int? ZoneId { get; set; }
+        public bool IsTopLevel { get; set; }
         public List<Participant>? Participants { get; set; } = new List<Participant>();
         public List<Connection>? ConnectionsAsFirstGroup { get; set; }
         public List<Connection>? ConnectionsAsSecondGroup { get; set; }

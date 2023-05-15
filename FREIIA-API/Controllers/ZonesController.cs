@@ -25,21 +25,28 @@ namespace FREIIA_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Zone>>> GetZones()
         {
-          if (_context.Zones == null)
-          {
-              return NotFound();
-          }
-            return await _context.Zones.ToListAsync();
+            if (_context.Zones == null)
+            {
+                return NotFound();
+            }
+            return await _context.Zones
+                .Include(z => z.Color)
+                .Include(z => z.Groups)
+                .ThenInclude(g => g.Participants)
+                .ThenInclude(p => p.Role)
+                .Include(z => z.Participants)
+                .ThenInclude(p => p.Role)
+                .ToListAsync();
         }
 
         // GET: api/Zones/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Zone>> GetZone(int id)
         {
-          if (_context.Zones == null)
-          {
-              return NotFound();
-          }
+            if (_context.Zones == null)
+            {
+                return NotFound();
+            }
             var zone = await _context.Zones.FindAsync(id);
 
             if (zone == null)
@@ -86,10 +93,10 @@ namespace FREIIA_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Zone>> PostZone(Zone zone)
         {
-          if (_context.Zones == null)
-          {
-              return Problem("Entity set 'FREIIAContext.Zones'  is null.");
-          }
+            if (_context.Zones == null)
+            {
+                return Problem("Entity set 'FREIIAContext.Zones'  is null.");
+            }
             _context.Zones.Add(zone);
             await _context.SaveChangesAsync();
 

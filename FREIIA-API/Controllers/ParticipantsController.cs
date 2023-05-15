@@ -25,14 +25,15 @@ namespace FREIIA_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Participant>>> GetParticipants()
         {
-          if (_context.Participants == null)
-          {
-              return NotFound();
-          }
+            if (_context.Participants == null)
+            {
+                return NotFound();
+            }
             return await _context.Participants
-                .Include(p=>p.Role)
-                //.ThenInclude(r=>r.Color)
-                .Include(p=>p.ContactInfo)
+                .Include(p => p.Role)
+                .ThenInclude(r => r.Color)
+                .Include(p => p.ContactInfo)
+                .Include(p => p.ExpertiseParticipants)
                 .ToListAsync();
         }
 
@@ -40,10 +41,10 @@ namespace FREIIA_API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Participant>> GetParticipant(int id)
         {
-          if (_context.Participants == null)
-          {
-              return NotFound();
-          }
+            if (_context.Participants == null)
+            {
+                return NotFound();
+            }
             var participant = await _context.Participants.FindAsync(id);
 
 
@@ -53,6 +54,19 @@ namespace FREIIA_API.Controllers
             }
 
             return participant;
+        }
+
+        // GET: api/Participants/5
+        [HttpGet("MainExpertise/{id}")]
+        public async Task<ActionResult<ExpertiseParticipant>> GetParticipantsMainExpertise(int id)
+        {
+            if (_context.Participants == null)
+            {
+                return NotFound();
+            }
+
+            return _context.ExpertiseParticipant
+                .Where(exp => exp.ParticipantId == id && exp.IsMainExpertise).First();
         }
 
         // PUT: api/Participants/5
@@ -91,10 +105,10 @@ namespace FREIIA_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Participant>> PostParticipant(Participant participant)
         {
-          if (_context.Participants == null)
-          {
-              return Problem("Entity set 'FREIIAContext.Participants'  is null.");
-          }
+            if (_context.Participants == null)
+            {
+                return Problem("Entity set 'FREIIAContext.Participants'  is null.");
+            }
             _context.Participants.Add(participant);
             await _context.SaveChangesAsync();
 
@@ -115,7 +129,7 @@ namespace FREIIA_API.Controllers
             {
                 // puts contactinfo for participant in a separate variable
                 var contactInfo = participant.ContactInfo;
-                if(contactInfo !=null)
+                if (contactInfo != null)
                 {
                     // removes the connected row in ParticipantContactinfo
                     _context.ParticipantContactInfos.Remove(contactInfo);
@@ -124,21 +138,21 @@ namespace FREIIA_API.Controllers
                 // finds expertises connected to the specific participant
                 var deleteExpertiseParticipantRow = _context.ExpertiseParticipant.Where(ep => ep.ParticipantId == id);
                 // deletes the connection of the expertise for a participant not the expertise itself
-                if(deleteExpertiseParticipantRow != null)
+                if (deleteExpertiseParticipantRow != null)
                 {
                     _context.ExpertiseParticipant.RemoveRange(deleteExpertiseParticipantRow);
                 }
-                
+
 
                 // finds the connections that need to be deleted where the participant is included atm
                 var deleteConnections = _context.Connections
                .Where(c => c.FirstParticipantId == participant.Id || c.SecondParticipantId == participant.Id);
                 // deletes the connection
-                if(deleteConnections != null)
+                if (deleteConnections != null)
                 {
                     _context.Connections.RemoveRange(deleteConnections);
                 }
-                
+
             }
 
             _context.Participants.Remove(participant);

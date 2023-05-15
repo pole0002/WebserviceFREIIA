@@ -9,10 +9,5 @@
         public List<Participant>? Participants { get; set; }
         public List<Connection>? ConnectionsAsFirstZone { get; set; }
         public List<Connection>? ConnectionsAsSecondZone { get; set; }
-
-        //private List<Connection> GetAllConnections()
-        //{
-        //    return ConnectionsAsFirstZone.AddRange(ConnectionsAsSecondZone);
-        //}
     }
 }

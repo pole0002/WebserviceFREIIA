@@ -26,22 +26,67 @@ namespace FREIIA_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Chart>>> GetCharts()
         {
-          if (_context.Charts == null)
-          {
-              return NotFound();
-          }
-            return await _context.Charts.ToListAsync();
+            if (_context.Charts == null)
+            {
+                return NotFound();
+            }
+
+            var results = await _context.Charts
+                .Include(c => c.Zones)
+                .ThenInclude(z => z.Color)
+                .Include(c => c.Zones)
+                .ThenInclude(z => z.Groups)
+                .ThenInclude(g => g.Participants)
+                .ThenInclude(p => p.Role)
+                .Include(c => c.Zones)
+                .ThenInclude(z => z.Participants)
+                .ThenInclude(p => p.Role)
+                .ThenInclude(r => r.Color)
+
+                .Include(c => c.Groups)
+                .ThenInclude(g => g.Color)
+                .Include(c => c.Groups)
+                .ThenInclude(g => g.Participants)
+                .ThenInclude(p => p.Role)
+                .ThenInclude(r => r.Color)
+
+                .Include(c => c.Participants)
+                //.ThenInclude(p => p.ExpertiseParticipants)
+                //.ThenInclude(exp => exp.color)
+                .ToListAsync();
+
+            return results;
         }
 
         // GET: api/Charts/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Chart>> GetChart(int id)
         {
-          if (_context.Charts == null)
-          {
-              return NotFound();
-          }
-            var chart = await _context.Charts.FindAsync(id);
+            if (_context.Charts == null)
+            {
+                return NotFound();
+            }
+
+            var chart = await _context.Charts
+                .Include(c => c.Zones)
+                .ThenInclude(z => z.Color)
+                .Include(c => c.Zones)
+                .ThenInclude(z => z.Groups)
+                .ThenInclude(g => g.Participants)
+                .ThenInclude(p => p.Role)
+                .Include(c => c.Zones)
+                .ThenInclude(z => z.Participants)
+                .ThenInclude(p => p.Role)
+                .ThenInclude(r => r.Color)
+                .Include(c => c.Groups)
+                .ThenInclude(g => g.Color)
+                .Include(c => c.Groups)
+                .ThenInclude(g => g.Participants)
+                .ThenInclude(p => p.Role)
+                .ThenInclude(r => r.Color)
+                .Include(c => c.Participants)
+                .Where(c => c.Id == id)
+                .FirstOrDefaultAsync();
 
             if (chart == null)
             {
@@ -50,6 +95,24 @@ namespace FREIIA_API.Controllers
 
             return chart;
         }
+
+        // GET: api/Charts/5/Groups
+        [HttpGet("{id}/Groups")]
+        public async Task<ActionResult<IEnumerable<Group>>> GetGroupsForChart(int id)
+        {
+            var chart = await _context.Charts
+                .Include(c => c.Groups)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (chart == null)
+            {
+                return NotFound();
+            }
+
+            return chart.Groups;
+        }
+
+
 
         // PUT: api/Charts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -87,10 +150,10 @@ namespace FREIIA_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Chart>> PostChart(Chart chart)
         {
-          if (_context.Charts == null)
-          {
-              return Problem("Entity set 'FREIIAContext.Charts'  is null.");
-          }
+            if (_context.Charts == null)
+            {
+                return Problem("Entity set 'FREIIAContext.Charts'  is null.");
+            }
             _context.Charts.Add(chart);
             await _context.SaveChangesAsync();
 

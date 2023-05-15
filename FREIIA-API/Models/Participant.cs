@@ -6,6 +6,7 @@
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string? FromCompany { get; set; }
+        public bool IsTopLevel { get; set; }
         public Role Role { get; set; }
         public List<ExpertiseParticipant>? ExpertiseParticipants { get; set; }
         //public List<Expertise>? Expertises { get; set; }

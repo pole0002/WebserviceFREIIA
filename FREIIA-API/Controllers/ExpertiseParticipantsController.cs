@@ -25,21 +25,22 @@ namespace FREIIA_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ExpertiseParticipant>>> GetExpertiseParticipant()
         {
-          if (_context.ExpertiseParticipant == null)
-          {
-              return NotFound();
-          }
-            return await _context.ExpertiseParticipant.ToListAsync();
+            if (_context.ExpertiseParticipant == null)
+            {
+                return NotFound();
+            }
+            return await _context.ExpertiseParticipant
+                .ToListAsync();
         }
 
         // GET: api/ExpertiseParticipants/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ExpertiseParticipant>> GetExpertiseParticipant(int id)
         {
-          if (_context.ExpertiseParticipant == null)
-          {
-              return NotFound();
-          }
+            if (_context.ExpertiseParticipant == null)
+            {
+                return NotFound();
+            }
             var expertiseParticipant = await _context.ExpertiseParticipant.FindAsync(id);
 
             if (expertiseParticipant == null)
@@ -86,10 +87,10 @@ namespace FREIIA_API.Controllers
         [HttpPost]
         public async Task<ActionResult<ExpertiseParticipant>> PostExpertiseParticipant(ExpertiseParticipant expertiseParticipant)
         {
-          if (_context.ExpertiseParticipant == null)
-          {
-              return Problem("Entity set 'FREIIAContext.ExpertiseParticipant'  is null.");
-          }
+            if (_context.ExpertiseParticipant == null)
+            {
+                return Problem("Entity set 'FREIIAContext.ExpertiseParticipant'  is null.");
+            }
             _context.ExpertiseParticipant.Add(expertiseParticipant);
             try
             {

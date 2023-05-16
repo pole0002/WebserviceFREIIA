@@ -152,7 +152,6 @@ namespace FREIIA_API.Controllers
                 {
                     _context.Connections.RemoveRange(deleteConnections);
                 }
-
             }
 
             _context.Participants.Remove(participant);

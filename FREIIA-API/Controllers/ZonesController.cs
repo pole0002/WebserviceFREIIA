@@ -111,6 +111,7 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
+            // including Group and Participants because there is a zoneId that are depending on the zone-table
             var zone = _context.Zones.Include(g=>g.Groups)
             .Include(p=>p.Participants)   
             .SingleOrDefault(g=> g.Id == id);
@@ -118,10 +119,14 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
+            // changing ZoneId in groups to null
             foreach (var group in zone.Groups)
             {
                 group.ZoneId = null;
+                // if we delete a zone in witch there are groups, change isToplevel of groups to True
+                group.IsTopLevel = true;
             }
+            // changing zoneId in Participants to null
             foreach (var participants in zone.Participants)
             {
                 participants.ZoneId = null;

@@ -130,6 +130,10 @@ namespace FREIIA_API.Controllers
             foreach (var participants in zone.Participants)
             {
                 participants.ZoneId = null;
+                if(participants.GroupId == null)
+                {
+                    participants.IsTopLevel = true;
+                }
             }
 
             _context.Zones.Remove(zone);

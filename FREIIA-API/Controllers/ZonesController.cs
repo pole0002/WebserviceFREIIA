@@ -141,13 +141,13 @@ namespace FREIIA_API.Controllers
             foreach (var connectionsAsFirstZone in zone.ConnectionsAsFirstZone)
             {
                 connectionsAsFirstZone.FirstZoneId = null;
-                // OBS, ska participant också försvinna ur denna tabell?
+               
             }
             // changing zoneId to null in CONNECTIONS-table if a zone is deleted 
             foreach (var connectionsAsSecondZone in zone.ConnectionsAsSecondZone)
             {
                 connectionsAsSecondZone.SecondZoneId = null;
-                // OBS, ska participant också försvinna ur denna tabell?
+                
             }
 
             _context.Zones.Remove(zone);

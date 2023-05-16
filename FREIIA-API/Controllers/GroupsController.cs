@@ -104,13 +104,33 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
-            var @group = await _context.Groups.FindAsync(id);
-            if (@group == null)
+            var group = _context.Groups
+                .Include(p=>p.Participants)
+                .Include(c1=>c1.ConnectionsAsFirstGroup)
+                .Include(c2=>c2.ConnectionsAsSecondGroup)
+                .SingleOrDefault(p => p.Id == id);
+            if (group == null)
             {
                 return NotFound();
             }
+            // if we delete a group change groupId in participant to null
+            foreach (var participant in group.Participants)
+            {
+                participant.GroupId = null;
+                // If a group has zoneId, set zoneId from group to participanttable in zoneId-column
+                if(group.ZoneId != null)
+                {
+                    participant.ZoneId = group.ZoneId;
+                }
+                 // if zoneId in participant is also null, change isTopLevel to true for participant
+                else if(participant.ZoneId == null)
+                {
+                    participant.IsTopLevel = true;
+                }   
+            }
 
-            _context.Groups.Remove(@group);
+
+            _context.Groups.Remove(group);
             await _context.SaveChangesAsync();
 
             return NoContent();

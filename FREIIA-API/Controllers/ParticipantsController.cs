@@ -124,7 +124,11 @@ namespace FREIIA_API.Controllers
                 return NotFound();
             }
             //Gets participant info and also info från ParticipantContactInfo
-            var participant = _context.Participants.Include(p => p.ContactInfo).SingleOrDefault(p => p.Id == id);
+            var participant = _context.Participants
+                .Include(p => p.ContactInfo)
+                .Include(c1=>c1.ConnectionsAsFirstParticipant)
+                .Include(c2=>c2.ConnectionsAsSecondParticipant)
+                .SingleOrDefault(p => p.Id == id);
             if (participant != null)
             {
                 // puts contactinfo for participant in a separate variable
@@ -145,12 +149,22 @@ namespace FREIIA_API.Controllers
 
 
                 // finds the connections that need to be deleted where the participant is included atm
-                var deleteConnections = _context.Connections
-               .Where(c => c.FirstParticipantId == participant.Id || c.SecondParticipantId == participant.Id);
-                // deletes the connection
-                if (deleteConnections != null)
+               // var deleteConnections = _context.Connections
+               //.Where(c => c.FirstParticipantId == participant.Id || c.SecondParticipantId == participant.Id);
+               // // deletes the connection
+               // if (deleteConnections != null)
+               // {
+               //     _context.Connections.RemoveRange(deleteConnections);
+               // }
+                // if a participant is in connectionsTable, change it to null;
+                foreach (var connectionAsFirstParticipant in participant.ConnectionsAsFirstParticipant)
                 {
-                    _context.Connections.RemoveRange(deleteConnections);
+                    connectionAsFirstParticipant.FirstParticipantId = null;
+                }
+                // if a participant is in connectionsTable, change it to null;
+                foreach (var connectionAsSecondParticipant in participant.ConnectionsAsSecondParticipant)
+                {
+                    connectionAsSecondParticipant.SecondParticipantId = null;
                 }
             }
 

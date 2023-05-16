@@ -146,16 +146,6 @@ namespace FREIIA_API.Controllers
                 {
                     _context.ExpertiseParticipant.RemoveRange(deleteExpertiseParticipantRow);
                 }
-
-
-                // finds the connections that need to be deleted where the participant is included atm
-               // var deleteConnections = _context.Connections
-               //.Where(c => c.FirstParticipantId == participant.Id || c.SecondParticipantId == participant.Id);
-               // // deletes the connection
-               // if (deleteConnections != null)
-               // {
-               //     _context.Connections.RemoveRange(deleteConnections);
-               // }
                 // if a participant is in connectionsTable, change it to null;
                 foreach (var connectionAsFirstParticipant in participant.ConnectionsAsFirstParticipant)
                 {

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FREIIA_API.Data;
 using FREIIA_API.Models;
+using NuGet.Protocol;
 
 namespace FREIIA_API.Controllers
 {
@@ -104,13 +105,23 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
-            var connection = await _context.Connections.FindAsync(id);
+            var connection = _context.Connections.Find(id);
             if (connection == null)
             {
                 return NotFound();
             }
+            // if there is only one foreign key in the connection-row, delete connection
+            if((connection.FirstZoneId != null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId == null) ||
+                (connection.FirstZoneId == null && connection.SecondZoneId != null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId == null) ||
+                (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId != null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId == null) ||
+                (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId != null && connection.FirstParticipantId == null && connection.SecondParticipantId == null) ||
+                (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId != null && connection.SecondParticipantId == null) ||
+                (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId != null))
+            {
+                _context.Connections.Remove(connection);
+            }
 
-            _context.Connections.Remove(connection);
+            
             await _context.SaveChangesAsync();
 
             return NoContent();

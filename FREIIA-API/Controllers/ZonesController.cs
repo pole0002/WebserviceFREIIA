@@ -113,7 +113,9 @@ namespace FREIIA_API.Controllers
             }
             // including Group and Participants because there is a zoneId that are depending on the zone-table
             var zone = _context.Zones.Include(g=>g.Groups)
-            .Include(p=>p.Participants)   
+            .Include(p=>p.Participants)
+            .Include(c1=>c1.ConnectionsAsFirstZone)
+            .Include(c2 => c2.ConnectionsAsSecondZone)
             .SingleOrDefault(g=> g.Id == id);
             if (zone == null)
             {
@@ -134,6 +136,18 @@ namespace FREIIA_API.Controllers
                 {
                     participants.IsTopLevel = true;
                 }
+            }
+            // changing zoneId to null in CONNECTIONS-table if a zone is deleted 
+            foreach (var connectionsAsFirstZone in zone.ConnectionsAsFirstZone)
+            {
+                connectionsAsFirstZone.FirstZoneId = null;
+                // OBS, ska participant också försvinna ur denna tabell?
+            }
+            // changing zoneId to null in CONNECTIONS-table if a zone is deleted 
+            foreach (var connectionsAsSecondZone in zone.ConnectionsAsSecondZone)
+            {
+                connectionsAsSecondZone.SecondZoneId = null;
+                // OBS, ska participant också försvinna ur denna tabell?
             }
 
             _context.Zones.Remove(zone);

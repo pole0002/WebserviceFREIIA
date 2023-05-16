@@ -128,6 +128,16 @@ namespace FREIIA_API.Controllers
                     participant.IsTopLevel = true;
                 }   
             }
+            // if a group is in connectionsTable, change it to null;
+            foreach (var connectionsAsFirstGroup in group.ConnectionsAsFirstGroup)
+            {
+                connectionsAsFirstGroup.FirstGroupId = null;
+            }
+            // if a group is in connectionsTable, change it to null;
+            foreach (var connectionsAsSecondGroup in group.ConnectionsAsSecondGroup)
+            {
+                connectionsAsSecondGroup.SecondGroupId = null;
+            }
 
 
             _context.Groups.Remove(group);

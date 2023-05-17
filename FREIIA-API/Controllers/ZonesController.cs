@@ -112,7 +112,8 @@ namespace FREIIA_API.Controllers
                 return NotFound();
             }
             // including Group and Participants because there is a zoneId that are depending on the zone-table
-            var zone = _context.Zones.Include(g=>g.Groups)
+            var zone = _context.Zones
+             .Include(g=>g.Groups)
             .Include(p=>p.Participants)
             .Include(c1=>c1.ConnectionsAsFirstZone)
             .Include(c2 => c2.ConnectionsAsSecondZone)
@@ -137,10 +138,12 @@ namespace FREIIA_API.Controllers
                     participants.IsTopLevel = true;
                 }
             }
-            // changing zoneId to null in CONNECTIONS-table if a zone is deleted 
+           
             foreach (var connectionsAsFirstZone in zone.ConnectionsAsFirstZone)
             {
+                // changing zoneId to null in CONNECTIONS-table if a zone is deleted 
                 connectionsAsFirstZone.FirstZoneId = null;
+                // deleting a connection if all other FK on the row are null
                
             }
             // changing zoneId to null in CONNECTIONS-table if a zone is deleted 
@@ -150,9 +153,17 @@ namespace FREIIA_API.Controllers
                 
             }
 
+            var deleteConnectionRow = _context.Connections.Where(f => f.FirstZoneId == zone.Id);
+            // if there is only SecondZoneID that is not null, and all other FK is NULL, delete row
+            foreach (var connection in deleteConnectionRow)
+            {
+                if(connection.FirstZoneId == null && connection.SecondZoneId != null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId == null)
+                {
+                    _context.Connections.Remove(connection);
+                }
+            }
             _context.Zones.Remove(zone);
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
 

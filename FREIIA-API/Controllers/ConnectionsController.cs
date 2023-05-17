@@ -111,16 +111,30 @@ namespace FREIIA_API.Controllers
                 return NotFound();
             }
             // if there is only one foreign key in the connection-row, delete connection
-            if((connection.FirstZoneId != null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId == null) ||
-                (connection.FirstZoneId == null && connection.SecondZoneId != null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId == null) ||
-                (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId != null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId == null) ||
-                (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId != null && connection.FirstParticipantId == null && connection.SecondParticipantId == null) ||
-                (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId != null && connection.SecondParticipantId == null) ||
-                (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId != null))
+            else if (connection.FirstZoneId != null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId == null)
             {
                 _context.Connections.Remove(connection);
             }
-
+            else if (connection.FirstZoneId == null && connection.SecondZoneId != null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId == null)
+            {
+                _context.Connections.Remove(connection);
+            }
+            else if (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId != null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId == null)
+            {
+                _context.Connections.Remove(connection);
+            }
+            else if (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId != null && connection.FirstParticipantId == null && connection.SecondParticipantId == null)
+            {
+                _context.Connections.Remove(connection);
+            }
+            else if (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId != null && connection.SecondParticipantId == null)
+            {
+                _context.Connections.Remove(connection);
+            }
+            else if (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId != null)
+            {
+                _context.Connections.Remove(connection);
+            }
             
             await _context.SaveChangesAsync();
 

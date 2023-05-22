@@ -89,16 +89,25 @@ namespace FREIIA_API.Controllers
         }
 
         // POST: api/Zones
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //POST-function for Zone works by accepting a Zone object and chartId. Also check the helper methods "GetChartById" and "SaveChartAsync" below.
         [HttpPost]
-        public async Task<ActionResult<Zone>> PostZone(Zone zone)
+        public async Task<ActionResult<Zone>> PostZone(Zone zone, int chartId)
         {
-            if (_context.Zones == null)
+            if (_context.Zones == null || !_context.Zones.Any())
             {
-                return Problem("Entity set 'FREIIAContext.Zones'  is null.");
+                return Problem("Entity set 'FREIIAContext.Zones'  is null OR empty");
             }
-            _context.Zones.Add(zone);
-            await _context.SaveChangesAsync();
+            //gets complete chartobject via the recieved int chartId in the function head. see helper method GetChartById for logic
+            Chart chart = GetChartById(chartId);
+
+            //essentially if chart EXISTS then add the recieved Zone zone to the list of Zones in the chart object.
+            if (chart != null)
+            {
+                chart.Zones.Add(zone);
+                await SaveChartAsync(chart);
+            }
+
+            
 
             return CreatedAtAction("GetZone", new { id = zone.Id }, zone);
         }
@@ -181,6 +190,18 @@ namespace FREIIA_API.Controllers
         private bool ZoneExists(int id)
         {
             return (_context.Zones?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+        private Chart GetChartById(int chartId)
+        {
+            Chart chart = _context.Charts //gets chart objects
+                .Include(c => c.Zones) //includes zones that are connected to specified chart
+                .SingleOrDefault(c => c.Id == chartId); //selects the chart that corresponds to the entered chartID
+            return chart;
+        }
+        private async Task SaveChartAsync(Chart chart)
+        {
+            _context.Update(chart); //updates the chart object in the DB that corresponds to the incoming chart
+            await _context.SaveChangesAsync(); //saves changes to DB.
         }
     }
 }

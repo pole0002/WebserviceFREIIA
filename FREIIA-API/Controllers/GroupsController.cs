@@ -133,30 +133,29 @@ namespace FREIIA_API.Controllers
             foreach (var connectionsAsFirstGroup in group.ConnectionsAsFirstGroup)
             {
                 connectionsAsFirstGroup.FirstGroupId = null;
+                // if there is only FirstGroupID that is NOT null, and all other FK is NULL, delete row
+                if (connectionsAsFirstGroup.FirstZoneId == null &&
+                    connectionsAsFirstGroup.SecondZoneId == null &&
+                    connectionsAsFirstGroup.SecondGroupId == null &&
+                    connectionsAsFirstGroup.FirstParticipantId == null &&
+                    connectionsAsFirstGroup.SecondParticipantId == null)
+                {
+                    _context.Connections.Remove(connectionsAsFirstGroup);
+                }
+
             }
             // if a group is in connectionsTable, change it to null;
             foreach (var connectionsAsSecondGroup in group.ConnectionsAsSecondGroup)
             {
                 connectionsAsSecondGroup.SecondGroupId = null;
-            }
-
-            var deleteConnectionRow = _context.Connections.Where(f => f.FirstGroupId == group.Id);
-            // if there is only SecondGroupID that is NOT null, and all other FK is NULL, delete row
-            foreach (var connection in deleteConnectionRow)
-            {
-                if (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId != null && connection.FirstParticipantId == null && connection.SecondParticipantId == null)
+                // if there is only SecondGroupID that is NOT null, and all other FK is NULL, delete row
+                if (connectionsAsSecondGroup.FirstZoneId == null &&
+                    connectionsAsSecondGroup.SecondZoneId == null &&
+                    connectionsAsSecondGroup.FirstGroupId == null &&
+                    connectionsAsSecondGroup.FirstParticipantId == null &&
+                    connectionsAsSecondGroup.SecondParticipantId == null)
                 {
-                    _context.Connections.Remove(connection);
-                }
-            }
-
-            deleteConnectionRow = _context.Connections.Where(s => s.SecondGroupId == group.Id);
-            // if there is only FirstGroupID that is NOT null, and all other FK is NULL, delete row
-            foreach (var connection in deleteConnectionRow)
-            {
-                if (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId != null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId == null)
-                {
-                    _context.Connections.Remove(connection);
+                    _context.Connections.Remove(connectionsAsSecondGroup);
                 }
             }
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FREIIA_API.Data;
 using FREIIA_API.Models;
+using FREIIA_API.Utility;
 
 namespace FREIIA_API.Controllers
 {
@@ -83,17 +84,48 @@ namespace FREIIA_API.Controllers
 
         // POST: api/Colors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPost]
+        //public async Task<ActionResult<Color>> PostColor(Color color)
+        //{
+        //  if (_context.Colors == null)
+        //  {
+        //      return Problem("Entity set 'FREIIAContext.Colors'  is null.");
+        //  }
+        //    _context.Colors.Add(color);
+        //    await _context.SaveChangesAsync();
+
+        //    return CreatedAtAction("GetColor", new { id = color.Id }, color);
+        //}
+
+        private readonly List<Color> _colors = new List<Color>();
+        private int _nextColorId = 1;
+
+        // POST: api/colors
         [HttpPost]
         public async Task<ActionResult<Color>> PostColor(Color color)
         {
-          if (_context.Colors == null)
-          {
-              return Problem("Entity set 'FREIIAContext.Colors'  is null.");
-          }
-            _context.Colors.Add(color);
-            await _context.SaveChangesAsync();
+            // Assuming you validate the color object before adding it
+            if (ModelState.IsValid)
+            {
+                // Find the corresponding chart by ChartId
+                var chart = await _context.Charts.FindAsync(color.ChartId);
+                if (chart == null)
+                {
+                    return NotFound("Chart not found.");
+                }
 
-            return CreatedAtAction("GetColor", new { id = color.Id }, color);
+                // Add the color to the data store
+                _context.Colors.Add(color);
+
+                // Save changes to the data store
+                await _context.SaveChangesAsync();
+
+                // Return a successful response with the newly created color
+                return CreatedAtAction(nameof(GetColor), new { id = color.Id }, color);
+            }
+
+            // If the color object is invalid, return a bad request response
+            return BadRequest(ModelState);
         }
 
         // DELETE: api/Colors/5

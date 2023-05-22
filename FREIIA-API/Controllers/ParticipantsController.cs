@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FREIIA_API.Data;
 using FREIIA_API.Models;
+using FREIIA_API.Utility;
 
 namespace FREIIA_API.Controllers
 {
@@ -107,12 +108,48 @@ namespace FREIIA_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Participant>> PostParticipant(Participant participant)
         {
-            if (_context.Participants == null)
+            if (string.IsNullOrEmpty(participant.FirstName))
             {
-                return Problem("Entity set 'FREIIAContext.Participants'  is null.");
+                return BadRequest("First name is required.");
             }
-            _context.Participants.Add(participant);
-            await _context.SaveChangesAsync();
+            if (string.IsNullOrEmpty(participant.LastName))
+            {
+                return BadRequest("Last name is required.");
+            }
+
+            Requests requests = new Requests(_context); //allows the methods found in Requests.cs class to be accessed from this class.
+            // Check if the chart exists
+            Chart chart = requests.GetChartById(participant.ChartId);
+            if (chart == null)
+            {
+                return NotFound(); // Or return any suitable response indicating chart not found
+            }
+
+            // Check if GroupId is provided and validate the group belongs to the same chart
+            if (participant.GroupId.HasValue)
+            {
+                Group group = chart.Groups.FirstOrDefault(g => g.Id == participant.GroupId.Value);
+                if (group == null)
+                {
+                    return BadRequest("Invalid GroupId."); // Return appropriate response if group is invalid
+                }
+            }
+
+            // Check if ZoneId is provided and validate the zone belongs to the same chart
+            if (participant.ZoneId.HasValue)
+            {
+                Zone zone = chart.Zones.FirstOrDefault(z => z.Id == participant.ZoneId.Value);
+                if (zone == null)
+                {
+                    return BadRequest("Invalid ZoneId."); // Return appropriate response if zone is invalid
+                }
+            }
+
+            // Add the participant to the chart
+            chart.Participants.Add(participant);
+
+            // Save changes to the chart
+            await requests.SaveChartAsync(chart);
 
             return CreatedAtAction("GetParticipant", new { id = participant.Id }, participant);
         }

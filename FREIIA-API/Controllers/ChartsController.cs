@@ -174,6 +174,25 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
+ 
+            //HACK: Kennys rekommendation, vet ej om det fungerar men testa.
+
+            //ParticipantsController participantController = new ParticipantsController(_context);
+
+            //GroupsController groupsController = new GroupsController(_context);
+
+            //ZonesController zoneController = new ZonesController(_context);
+
+            //foreach (var participant in chart.Participants)
+            //{
+            //    await participantController.DeleteParticipant(participant.Id);
+            //}
+
+            //foreach (var group in chart.Groups)
+            //{
+            //    await groupsController.DeleteGroup(group.Id);
+            //}
+
             //var targetChart = _context.Charts.Include(c => c.Zones).Include(c => c.Groups).Include(c => c.Participants).SingleOrDefault(c => c.Id == chartId);
             //if (targetChart != null)
             //{

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FREIIA_API.Data;
 using FREIIA_API.Models;
 using System.Security.Policy;
+using FREIIA_API.Utility;
 
 namespace FREIIA_API.Controllers
 {
@@ -85,15 +86,44 @@ namespace FREIIA_API.Controllers
         // POST: api/Groups
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Group>> PostGroup(Group @group, int chartId)
+        public async Task<ActionResult<Group>> PostGroup(Group @group)
         {
           if (_context.Groups == null || !_context.Groups.Any())
           {
               return Problem("Entity set 'FREIIAContext.Groups'  is null OR empty");
           }
-          Chart chart 
-            _context.Groups.Add(@group);
-            await _context.SaveChangesAsync();
+
+            //allows the methods found in Requests.cs class to be accessed from this class.
+            Requests requests = new Requests(_context);
+
+            // Check if the chart exists
+            Chart chart = requests.GetChartById(@group.ChartId);
+            if (chart == null)
+            {
+                return NotFound();
+            }
+
+            // Validate input and required fields
+            if (string.IsNullOrEmpty(@group.Name))
+            {
+                return BadRequest("Group name is required.");
+            }
+
+            // Check if ZoneId is provided and validate the zone belongs to the same chart
+            if (@group.ZoneId.HasValue)
+            {
+                Models.Zone zone = chart.Zones.FirstOrDefault(z => z.Id == @group.ZoneId.Value);
+                if (zone == null)
+                {
+                    return BadRequest("Invalid ZoneId."); 
+                }
+            }
+
+            //add group to chart
+            chart.Groups.Add(@group);
+
+            //save changes to chart
+            await requests.SaveChartAsync(chart);
 
             return CreatedAtAction("GetGroup", new { id = @group.Id }, @group);
         }

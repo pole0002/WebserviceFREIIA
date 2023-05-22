@@ -1,4 +1,6 @@
-﻿namespace FREIIA_API.Models
+﻿using SQLitePCL;
+
+namespace FREIIA_API.Models
 {
     public class Connection
     {
@@ -20,5 +22,39 @@
         public virtual Participant? FirstParticipant { get; set; }
         public int? SecondParticipantId { get; set; }
         public virtual Participant? SecondParticipant { get; set; }
+
+
+        // Method for counting how many FK are left in connectionstable
+        public static int CountForeignKeys(Connection connection)
+        {
+            int count = 0;
+
+            if (connection.FirstZoneId != null)
+            {
+                count++;
+            }
+            if (connection.SecondZoneId != null)
+            {
+                count++;
+            }
+            if (connection.FirstGroupId != null)
+            {
+                count++;
+            }
+            if (connection.SecondGroupId != null)
+            {
+                count++;
+            }
+            if (connection.FirstParticipantId != null)
+            {
+                count++;
+            }
+            if (connection.SecondParticipantId != null)
+            {
+                count++;
+            }
+
+            return count;
+        }
     }
 }

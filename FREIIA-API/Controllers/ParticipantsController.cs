@@ -153,7 +153,7 @@ namespace FREIIA_API.Controllers
                 {
                     connectionAsFirstParticipant.FirstParticipantId = null;
                     // if there is only FirstParticipantID that is NOT null, and all other FK is NULL, delete row
-                    if (CountForeignKeys(connectionAsFirstParticipant) == 1)
+                    if (Connection.CountForeignKeys(connectionAsFirstParticipant) == 1)
                     {
                         _context.Connections.Remove(connectionAsFirstParticipant);
                     }
@@ -163,7 +163,7 @@ namespace FREIIA_API.Controllers
                 {
                     connectionAsSecondParticipant.SecondParticipantId = null;
                     // if there is only FirstParticipantID that is NOT null, and all other FK is NULL, delete row
-                    if (CountForeignKeys(connectionAsSecondParticipant) == 1)
+                    if (Connection.CountForeignKeys(connectionAsSecondParticipant) == 1)
                     {
                         _context.Connections.Remove(connectionAsSecondParticipant);
                     }
@@ -175,39 +175,6 @@ namespace FREIIA_API.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        // Private method for counting how many FK are left in connectionstable
-        private int CountForeignKeys (Connection connection)
-        {
-            int count = 0;
-
-            if(connection.FirstZoneId != null)
-            {
-                count++;
-            }
-            if(connection.SecondZoneId != null)
-            { 
-                count++;
-            }
-            if (connection.FirstGroupId != null)
-            {
-                count++;
-            }
-            if (connection.SecondGroupId != null)
-            {
-                count++;
-            }
-            if (connection.FirstParticipantId != null)
-            {
-                count++;
-            }
-            if (connection.SecondParticipantId != null)
-            {
-                count++;
-            }
-
-            return count;
         }
 
         private bool ParticipantExists(int id)

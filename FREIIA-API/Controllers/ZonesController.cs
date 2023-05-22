@@ -144,11 +144,7 @@ namespace FREIIA_API.Controllers
                 // changing zoneId to null in CONNECTIONS-table if a zone is deleted 
                 connectionsAsFirstZone.FirstZoneId = null;
                 // if there is only FirstZoneID that is NOT null, and all other FK is NULL, delete row
-                if (connectionsAsFirstZone.SecondZoneId == null &&
-                    connectionsAsFirstZone.FirstGroupId == null &&
-                    connectionsAsFirstZone.SecondGroupId == null &&
-                    connectionsAsFirstZone.FirstParticipantId == null &&
-                    connectionsAsFirstZone.SecondParticipantId == null)
+                if (CountForeignKeys(connectionsAsFirstZone) == 1)
                 {
                     _context.Connections.Remove(connectionsAsFirstZone);
                 }
@@ -159,11 +155,7 @@ namespace FREIIA_API.Controllers
             {
                 connectionsAsSecondZone.SecondZoneId = null;
                 // if there is only SecondZoneId that is NOT null, and all other FK is NULL, delete row
-                if (connectionsAsSecondZone.FirstZoneId == null &&
-                    connectionsAsSecondZone.FirstGroupId == null &&
-                    connectionsAsSecondZone.SecondGroupId == null &&
-                    connectionsAsSecondZone.FirstParticipantId == null &&
-                    connectionsAsSecondZone.SecondParticipantId == null)
+                if (CountForeignKeys(connectionsAsSecondZone) == 1)
                 {
                     _context.Connections.Remove(connectionsAsSecondZone);
                 }
@@ -173,6 +165,39 @@ namespace FREIIA_API.Controllers
             _context.Zones.Remove(zone);
             await _context.SaveChangesAsync();
             return NoContent();
+        }
+
+        // Private method for counting how many FK are left in connectionstable
+        private int CountForeignKeys(Connection connection)
+        {
+            int count = 0;
+
+            if (connection.FirstZoneId != null)
+            {
+                count++;
+            }
+            if (connection.SecondZoneId != null)
+            {
+                count++;
+            }
+            if (connection.FirstGroupId != null)
+            {
+                count++;
+            }
+            if (connection.SecondGroupId != null)
+            {
+                count++;
+            }
+            if (connection.FirstParticipantId != null)
+            {
+                count++;
+            }
+            if (connection.SecondParticipantId != null)
+            {
+                count++;
+            }
+
+            return count;
         }
 
         private bool ZoneExists(int id)

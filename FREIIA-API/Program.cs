@@ -1,12 +1,14 @@
 using FREIIA_API.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // SQLSERVER
 //Add services to the container.
 builder.Services.AddDbContext<FREIIAContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseLazyLoadingProxies()
+    .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 // SQLITE
@@ -14,7 +16,12 @@ builder.Services.AddDbContext<FREIIAContext>(options =>
 //    options.UseSqlite("Datasource = FREIIA.db"));
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+     .AddJsonOptions(options =>
+     {
+         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+     });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 // establishing Policy requirements: 

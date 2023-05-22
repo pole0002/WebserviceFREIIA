@@ -9,8 +9,8 @@ namespace FREIIA_API.Models
         public string Name { get; set; }
         public string Password { get; set; }
         public DateTime CreationDate { get; set; }
-        public List<Zone>? Zones { get; set; } = new List<Zone>();
-        public List<Group>? Groups { get; set; } = new List<Group>();
-        public List<Participant>? Participants { get; set; } = new List<Participant>();
+        public virtual List<Zone>? Zones { get; set; } = new List<Zone>();
+        public virtual List<Group>? Groups { get; set; } = new List<Group>();
+        public virtual List<Participant>? Participants { get; set; } = new List<Participant>();
     }
 }

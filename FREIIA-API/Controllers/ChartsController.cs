@@ -31,29 +31,17 @@ namespace FREIIA_API.Controllers
                 return NotFound();
             }
 
-            var results = await _context.Charts
-                .Include(c => c.Zones)
-                .ThenInclude(z => z.Color)
-                .Include(c => c.Zones)
-                .ThenInclude(z => z.Groups)
-                .ThenInclude(g => g.Participants)
-                .ThenInclude(p => p.Role)
-                .Include(c => c.Zones)
-                .ThenInclude(z => z.Participants)
-                .ThenInclude(p => p.Role)
-                .ThenInclude(r => r.Color)
+            var results = await _context.Charts.ToListAsync();
 
-                .Include(c => c.Groups)
-                .ThenInclude(g => g.Color)
-                .Include(c => c.Groups)
-                .ThenInclude(g => g.Participants)
-                .ThenInclude(p => p.Role)
-                .ThenInclude(r => r.Color)
+            //iterate over charts to remove duplicate participant and groups in results.
+            foreach (var chart in results)
+            {
+                //Remove all participants that are not on top level in chart.
+                chart.Participants.RemoveAll(p => p.IsTopLevel == false);
 
-                .Include(c => c.Participants)
-                //.ThenInclude(p => p.ExpertiseParticipants)
-                //.ThenInclude(exp => exp.color)
-                .ToListAsync();
+                //Remove all groups that are not on top level in chart.
+                chart.Groups.RemoveAll(p => p.IsTopLevel == false);
+            }
 
             return results;
         }
@@ -68,30 +56,18 @@ namespace FREIIA_API.Controllers
             }
 
             var chart = await _context.Charts
-                .Include(c => c.Zones)
-                .ThenInclude(z => z.Color)
-                .Include(c => c.Zones)
-                .ThenInclude(z => z.Groups)
-                .ThenInclude(g => g.Participants)
-                .ThenInclude(p => p.Role)
-                .Include(c => c.Zones)
-                .ThenInclude(z => z.Participants)
-                .ThenInclude(p => p.Role)
-                .ThenInclude(r => r.Color)
-                .Include(c => c.Groups)
-                .ThenInclude(g => g.Color)
-                .Include(c => c.Groups)
-                .ThenInclude(g => g.Participants)
-                .ThenInclude(p => p.Role)
-                .ThenInclude(r => r.Color)
-                .Include(c => c.Participants)
-                .Where(c => c.Id == id)
-                .FirstOrDefaultAsync();
+                .Where(c => c.Id == id).FirstAsync();
 
             if (chart == null)
             {
                 return NotFound();
             }
+
+            //Remove all participants that are not on top level in chart.
+            chart.Participants.RemoveAll(p => p.IsTopLevel == false);
+
+            //Remove all groups that are not on top level in chart.
+            chart.Groups.RemoveAll(p => p.IsTopLevel == false);
 
             return chart;
         }
@@ -174,6 +150,25 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
+
+            //HACK: Kennys rekommendation, vet ej om det fungerar men testa.
+
+            //ParticipantsController participantController = new ParticipantsController(_context);
+
+            //GroupsController groupsController = new GroupsController(_context);
+
+            //ZonesController zoneController = new ZonesController(_context);
+
+            //foreach (var participant in chart.Participants)
+            //{
+            //    await participantController.DeleteParticipant(participant.Id);
+            //}
+
+            //foreach (var group in chart.Groups)
+            //{
+            //    await groupsController.DeleteGroup(group.Id);
+            //}
+
             //var targetChart = _context.Charts.Include(c => c.Zones).Include(c => c.Groups).Include(c => c.Participants).SingleOrDefault(c => c.Id == chartId);
             //if (targetChart != null)
             //{

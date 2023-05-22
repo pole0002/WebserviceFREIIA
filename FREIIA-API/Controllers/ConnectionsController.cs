@@ -99,43 +99,21 @@ namespace FREIIA_API.Controllers
 
         // DELETE: api/Connections/5
         [HttpDelete("{id}")]
+        // OBS!!! =>>>>>> När vi raderar connection på detta sätt, FUNGERAR INTE DET!
         public async Task<IActionResult> DeleteConnection(int id)
         {
             if (_context.Connections == null)
             {
                 return NotFound();
             }
+
             var connection = _context.Connections.Find(id);
+
             if (connection == null)
             {
                 return NotFound();
             }
-            //// if there is only one foreign key in the connection-row, delete connection
-            //else if (connection.FirstZoneId != null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId == null)
-            //{
-            //    _context.Connections.Remove(connection);
-            //}
-            //else if (connection.FirstZoneId == null && connection.SecondZoneId != null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId == null)
-            //{
-            //    _context.Connections.Remove(connection);
-            //}
-            //else if (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId != null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId == null)
-            //{
-            //    _context.Connections.Remove(connection);
-            //}
-            //else if (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId != null && connection.FirstParticipantId == null && connection.SecondParticipantId == null)
-            //{
-            //    _context.Connections.Remove(connection);
-            //}
-            //else if (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId != null && connection.SecondParticipantId == null)
-            //{
-            //    _context.Connections.Remove(connection);
-            //}
-            //else if (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId != null)
-            //{
-            //    _context.Connections.Remove(connection);
-            //}
-            
+                        
             await _context.SaveChangesAsync();
 
             return NoContent();

@@ -82,6 +82,7 @@ namespace FREIIA_API.Data
             base.OnModelCreating(modelBuilder);
         }
 
+
         public DbSet<FREIIA_API.Models.ExpertiseParticipant>? ExpertiseParticipant { get; set; }
     }
 }

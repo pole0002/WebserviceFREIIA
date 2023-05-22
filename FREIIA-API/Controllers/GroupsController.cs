@@ -134,7 +134,7 @@ namespace FREIIA_API.Controllers
             {
                 connectionsAsFirstGroup.FirstGroupId = null;
                 // if there is only FirstGroupID that is NOT null, and all other FK is NULL, delete row
-                if (CountForeignKeys(connectionsAsFirstGroup) == 1)
+                if (Connection.CountForeignKeys(connectionsAsFirstGroup) == 1)
                 {
                     _context.Connections.Remove(connectionsAsFirstGroup);
                 }
@@ -145,7 +145,7 @@ namespace FREIIA_API.Controllers
             {
                 connectionsAsSecondGroup.SecondGroupId = null;
                 // if there is only SecondGroupID that is NOT null, and all other FK is NULL, delete row
-                if (CountForeignKeys(connectionsAsSecondGroup) == 1)
+                if (Connection.CountForeignKeys(connectionsAsSecondGroup) == 1)
                 {
                     _context.Connections.Remove(connectionsAsSecondGroup);
                 }
@@ -155,39 +155,6 @@ namespace FREIIA_API.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        // Private method for counting how many FK are left in connectionstable
-        private int CountForeignKeys(Connection connection)
-        {
-            int count = 0;
-
-            if (connection.FirstZoneId != null)
-            {
-                count++;
-            }
-            if (connection.SecondZoneId != null)
-            {
-                count++;
-            }
-            if (connection.FirstGroupId != null)
-            {
-                count++;
-            }
-            if (connection.SecondGroupId != null)
-            {
-                count++;
-            }
-            if (connection.FirstParticipantId != null)
-            {
-                count++;
-            }
-            if (connection.SecondParticipantId != null)
-            {
-                count++;
-            }
-
-            return count;
         }
 
         private bool GroupExists(int id)

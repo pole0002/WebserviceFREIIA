@@ -85,12 +85,13 @@ namespace FREIIA_API.Controllers
         // POST: api/Groups
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Group>> PostGroup(Group @group)
+        public async Task<ActionResult<Group>> PostGroup(Group @group, int chartId)
         {
-          if (_context.Groups == null)
+          if (_context.Groups == null || !_context.Groups.Any())
           {
-              return Problem("Entity set 'FREIIAContext.Groups'  is null.");
+              return Problem("Entity set 'FREIIAContext.Groups'  is null OR empty");
           }
+          Chart chart 
             _context.Groups.Add(@group);
             await _context.SaveChangesAsync();
 

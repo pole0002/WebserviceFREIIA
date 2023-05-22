@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FREIIA_API.Data;
 using FREIIA_API.Models;
+using FREIIA_API.Utility;
 
 namespace FREIIA_API.Controllers
 {
@@ -97,17 +98,17 @@ namespace FREIIA_API.Controllers
             {
                 return Problem("Entity set 'FREIIAContext.Zones'  is null OR empty");
             }
+            Requests requests = new Requests(_context); //allows the methods found in Requests.cs class to be accessed from this class.
+
             //gets complete chartobject via the recieved int chartId in the function head. see helper method GetChartById for logic
-            Chart chart = GetChartById(chartId);
+            Chart chart = requests.GetChartById(chartId);
 
             //essentially if chart EXISTS then add the recieved Zone zone to the list of Zones in the chart object.
             if (chart != null)
             {
                 chart.Zones.Add(zone);
-                await SaveChartAsync(chart);
+                await requests.SaveChartAsync(chart);
             }
-
-            
 
             return CreatedAtAction("GetZone", new { id = zone.Id }, zone);
         }
@@ -180,17 +181,6 @@ namespace FREIIA_API.Controllers
         {
             return (_context.Zones?.Any(e => e.Id == id)).GetValueOrDefault();
         }
-        private Chart GetChartById(int chartId)
-        {
-            Chart chart = _context.Charts //gets chart objects
-                .Include(c => c.Zones) //includes zones that are connected to specified chart
-                .SingleOrDefault(c => c.Id == chartId); //selects the chart that corresponds to the entered chartID
-            return chart;
-        }
-        private async Task SaveChartAsync(Chart chart)
-        {
-            _context.Update(chart); //updates the chart object in the DB that corresponds to the incoming chart
-            await _context.SaveChangesAsync(); //saves changes to DB.
-        }
+
     }
 }

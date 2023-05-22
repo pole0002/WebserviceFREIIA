@@ -34,6 +34,8 @@ namespace FREIIA_API.Controllers
                 .ThenInclude(r => r.Color)
                 .Include(p => p.ContactInfo)
                 .Include(p => p.ExpertiseParticipants)
+                .Include(c1=>c1.ConnectionsAsFirstParticipant)
+                .Include(c2 => c2.ConnectionsAsSecondParticipant)
                 .ToListAsync();
         }
 
@@ -146,15 +148,36 @@ namespace FREIIA_API.Controllers
                 {
                     _context.ExpertiseParticipant.RemoveRange(deleteExpertiseParticipantRow);
                 }
-                // if a participant is in connectionsTable, change it to null;
+                // if a participant1 is in connectionsTable, change it to null;
                 foreach (var connectionAsFirstParticipant in participant.ConnectionsAsFirstParticipant)
                 {
                     connectionAsFirstParticipant.FirstParticipantId = null;
                 }
-                // if a participant is in connectionsTable, change it to null;
+                // if a participant2 is in connectionsTable, change it to null;
                 foreach (var connectionAsSecondParticipant in participant.ConnectionsAsSecondParticipant)
                 {
                     connectionAsSecondParticipant.SecondParticipantId = null;
+                }
+
+            }
+
+            var deleteConnectionRow = _context.Connections.Where(f => f.FirstParticipantId == participant.Id);
+            // if there is only SecondParticipantID that is NOT null, and all other FK is NULL, delete row
+            foreach (var connection in deleteConnectionRow)
+            {
+                if (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId != null)
+                {
+                    _context.Connections.Remove(connection);
+                }
+            }
+
+            deleteConnectionRow = _context.Connections.Where(s => s.SecondParticipantId == participant.Id);
+            // if there is only FirstParticipantID that is NOT null, and all other FK is NULL, delete row
+            foreach (var connection in deleteConnectionRow)
+            {
+                if (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId != null && connection.SecondParticipantId == null)
+                {
+                    _context.Connections.Remove(connection);
                 }
             }
 

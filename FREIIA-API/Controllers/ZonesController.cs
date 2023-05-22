@@ -154,10 +154,21 @@ namespace FREIIA_API.Controllers
             }
 
             var deleteConnectionRow = _context.Connections.Where(f => f.FirstZoneId == zone.Id);
-            // if there is only SecondZoneID that is not null, and all other FK is NULL, delete row
+            // if there is only SecondZoneID that is NOT null, and all other FK is NULL, delete row
             foreach (var connection in deleteConnectionRow)
             {
                 if(connection.FirstZoneId == null && connection.SecondZoneId != null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId == null)
+                {
+                    _context.Connections.Remove(connection);
+                }
+            }
+            
+
+            deleteConnectionRow = _context.Connections.Where(s=>s.SecondZoneId == zone.Id);
+            // if there is only FirstZoneID that is NOT null, and all other FK is NULL, delete row
+            foreach (var connection in deleteConnectionRow)
+            {
+                if (connection.FirstZoneId != null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId == null)
                 {
                     _context.Connections.Remove(connection);
                 }

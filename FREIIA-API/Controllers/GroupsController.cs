@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FREIIA_API.Data;
 using FREIIA_API.Models;
+using System.Security.Policy;
 
 namespace FREIIA_API.Controllers
 {
@@ -139,6 +140,25 @@ namespace FREIIA_API.Controllers
                 connectionsAsSecondGroup.SecondGroupId = null;
             }
 
+            var deleteConnectionRow = _context.Connections.Where(f => f.FirstGroupId == group.Id);
+            // if there is only SecondGroupID that is NOT null, and all other FK is NULL, delete row
+            foreach (var connection in deleteConnectionRow)
+            {
+                if (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId == null && connection.SecondGroupId != null && connection.FirstParticipantId == null && connection.SecondParticipantId == null)
+                {
+                    _context.Connections.Remove(connection);
+                }
+            }
+
+            deleteConnectionRow = _context.Connections.Where(s => s.SecondGroupId == group.Id);
+            // if there is only FirstGroupID that is NOT null, and all other FK is NULL, delete row
+            foreach (var connection in deleteConnectionRow)
+            {
+                if (connection.FirstZoneId == null && connection.SecondZoneId == null && connection.FirstGroupId != null && connection.SecondGroupId == null && connection.FirstParticipantId == null && connection.SecondParticipantId == null)
+                {
+                    _context.Connections.Remove(connection);
+                }
+            }
 
             _context.Groups.Remove(group);
             await _context.SaveChangesAsync();

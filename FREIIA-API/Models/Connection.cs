@@ -6,7 +6,8 @@ namespace FREIIA_API.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public virtual ConnectionStyle ConnectionStyle { get; set; }
+        public virtual ConnectionStyle? ConnectionStyle { get; set; }
+        public int ConnectionStyleId { get; set; }
         
         public int? FirstZoneId { get; set; }
         public virtual Zone? FirstZone { get; set; }

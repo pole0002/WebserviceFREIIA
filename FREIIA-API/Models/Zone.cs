@@ -4,10 +4,10 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public Color Color { get; set; }
-        public List<Group>? Groups { get; set; }
-        public List<Participant>? Participants { get; set; }
-        public List<Connection>? ConnectionsAsFirstZone { get; set; }
-        public List<Connection>? ConnectionsAsSecondZone { get; set; }
+        public virtual Color Color { get; set; }
+        public virtual List<Group>? Groups { get; set; }
+        public virtual List<Participant>? Participants { get; set; }
+        public virtual List<Connection>? ConnectionsAsFirstZone { get; set; }
+        public virtual List<Connection>? ConnectionsAsSecondZone { get; set; }
     }
 }

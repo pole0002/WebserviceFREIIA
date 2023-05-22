@@ -105,7 +105,9 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
+
             var connection = _context.Connections.Find(id);
+
             if (connection == null)
             {
                 return NotFound();

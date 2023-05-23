@@ -99,7 +99,7 @@ namespace FREIIA_API.Controllers
 
         // DELETE: api/Connections/5
         [HttpDelete("{id}")]
-        // OBS!!! =>>>>>> När vi raderar connection på detta sätt, FUNGERAR INTE DET!
+        
         public async Task<IActionResult> DeleteConnection(int id)
         {
             if (_context.Connections == null)
@@ -107,12 +107,14 @@ namespace FREIIA_API.Controllers
                 return NotFound();
             }
 
+            // finding the ID of the chosen connection row
             var connection = _context.Connections.Find(id);
 
             if (connection == null)
             {
                 return NotFound();
             }
+            _context.Connections.Remove(connection);
                         
             await _context.SaveChangesAsync();
 

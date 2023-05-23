@@ -109,11 +109,24 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
+            else if (role != null)
+            {
+                // Getting a pist of participants who has this role ID
+                List<Participant> participants = _context.Participants.Where(p => p.RoleId == id).ToList();
 
-            _context.Roles.Remove(role);
-            await _context.SaveChangesAsync();
+                // We will update all participants from the list from the chosen roleID to -1 (cannot set to null due to that it is an integer, not a string)
+                foreach (Participant participant in participants)
+                {
+                    participant.RoleId = null;
+                }
 
-            return NoContent();
+
+
+                _context.Roles.Remove(role);
+            }
+                await _context.SaveChangesAsync();
+            
+            return NoContent();    
         }
 
         private bool RoleExists(int id)

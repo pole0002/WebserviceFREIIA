@@ -11,7 +11,7 @@
         public string? FromCompany { get; set; }
         public bool IsTopLevel { get; set; }
         public virtual Role? Role { get; set; }
-        public int RoleId { get; set; }
+        public int? RoleId { get; set; }
         public virtual List<ExpertiseParticipant>? ExpertiseParticipants { get; set; }
         public virtual ParticipantContactInfo? ContactInfo { get; set; }
         public virtual List<Connection>? ConnectionsAsFirstParticipant { get; set; }

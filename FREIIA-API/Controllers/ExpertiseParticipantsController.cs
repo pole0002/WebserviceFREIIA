@@ -111,25 +111,7 @@ namespace FREIIA_API.Controllers
             return CreatedAtAction("GetExpertiseParticipant", new { id = expertiseParticipant.ExpertiseId }, expertiseParticipant);
         }
 
-        // DELETE: api/ExpertiseParticipants/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteExpertiseParticipant(int id)
-        {
-            if (_context.ExpertiseParticipant == null)
-            {
-                return NotFound();
-            }
-            var expertiseParticipant = await _context.ExpertiseParticipant.FindAsync(id);
-            if (expertiseParticipant == null)
-            {
-                return NotFound();
-            }
-
-            _context.ExpertiseParticipant.Remove(expertiseParticipant);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
+        // YOu can not delete any row in this table directly due to M:M. There for no delete function
 
         private bool ExpertiseParticipantExists(int id)
         {

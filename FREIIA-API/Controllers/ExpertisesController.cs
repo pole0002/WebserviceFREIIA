@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FREIIA_API.Data;
 using FREIIA_API.Models;
+using System.Security.Cryptography.X509Certificates;
 
 namespace FREIIA_API.Controllers
 {
@@ -104,19 +105,37 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
-            var expertise = _context.Expertises
+            Expertise expertise = _context.Expertises
                 .Include(e => e.ExpertiseParticipants)
+                .ThenInclude(p=>p.Participant)
                 .FirstOrDefault(e => e.Id == id);
             if (expertise == null)
             {
                 return NotFound();
             }
-            // finds expertises connected to the specific participant
-            var deleteExpertiseParticipantRow = _context.ExpertiseParticipant.Where(ep => ep.ExpertiseId == id);
-            // deletes the row in Expertiseparticipant table
-            if (deleteExpertiseParticipantRow != null)
+
+            if(expertise != null)
             {
-                _context.ExpertiseParticipant.RemoveRange(deleteExpertiseParticipantRow);
+                ExpertiseParticipant expertiseParticipantExpertiseId = expertise.ExpertiseParticipants
+                    .FirstOrDefault(ep => ep.ExpertiseId == id);
+
+                if(expertiseParticipantExpertiseId != null)
+                {
+                    int participantId = expertiseParticipantExpertiseId.ParticipantId;
+
+                    // find the next added expertise for participant
+                    ExpertiseParticipant nextExpertiseParticipantExpertiseId = _context.ExpertiseParticipant
+                        .Where(ep => ep.ParticipantId == participantId && ep.ExpertiseId != id)
+                        .OrderBy(ep => ep.ExpertiseId)
+                        .FirstOrDefault();
+
+                    if(nextExpertiseParticipantExpertiseId != null)
+                    {
+                        // change isMainExpertise for the experticeparticipantrow of the next expertise in the list for thesame participant
+                        nextExpertiseParticipantExpertiseId.IsMainExpertise = true;
+
+                    }
+                }
             }
 
             _context.Expertises.Remove(expertise);
@@ -124,7 +143,7 @@ namespace FREIIA_API.Controllers
 
             return NoContent();
         }
-
+        
         private bool ExpertiseExists(int id)
         {
             return (_context.Expertises?.Any(e => e.Id == id)).GetValueOrDefault();

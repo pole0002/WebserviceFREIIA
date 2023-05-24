@@ -116,11 +116,13 @@ namespace FREIIA_API.Controllers
 
             if(expertise != null)
             {
+                // defining that expertiseId is same as the expertise Id in the Expertise Table
                 ExpertiseParticipant expertiseParticipantExpertiseId = expertise.ExpertiseParticipants
                     .FirstOrDefault(ep => ep.ExpertiseId == id);
 
                 if(expertiseParticipantExpertiseId != null)
                 {
+                    // getting the participantID of the expertise
                     int participantId = expertiseParticipantExpertiseId.ParticipantId;
 
                     // find the next added expertise for participant

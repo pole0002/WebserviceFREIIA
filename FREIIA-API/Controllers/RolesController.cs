@@ -105,9 +105,14 @@ namespace FREIIA_API.Controllers
                 return NotFound();
             }
             var role = await _context.Roles.FindAsync(id);
+            var defaultRoleValue = 7;
             if (role == null)
             {
                 return NotFound();
+            }
+            else if(role.Id == defaultRoleValue)
+            {
+                return BadRequest("Cannot delete the default value");
             }
             else if (role != null)
             {
@@ -115,12 +120,13 @@ namespace FREIIA_API.Controllers
                 // Getting a list of participants who has this role ID
                 List<Participant> participants = _context.Participants.Where(p => p.RoleId == id).ToList();
 
-                var defaultValue = 7;
+                
                 // We will update all participants from the list from the chosen roleID to 0 
                 foreach (var participant in participants)
                 {
-                    participant.RoleId = defaultValue;
-                }
+                    participant.RoleId = defaultRoleValue;
+                   
+                }   
             }
             _context.Roles.Remove(role);
             await _context.SaveChangesAsync();

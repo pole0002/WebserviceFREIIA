@@ -96,25 +96,7 @@ namespace FREIIA_API.Controllers
             return CreatedAtAction("GetConnectionStyle", new { id = connectionStyle.Id }, connectionStyle);
         }
 
-        // DELETE: api/ConnectionStyles/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteConnectionStyle(int id)
-        {
-            if (_context.ConnectionStyles == null)
-            {
-                return NotFound();
-            }
-            var connectionStyle = await _context.ConnectionStyles.FindAsync(id);
-            if (connectionStyle == null)
-            {
-                return NotFound();
-            }
-
-            _context.ConnectionStyles.Remove(connectionStyle);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
+    // You can not delete any of theese connections from this table so there is no DELETE FUNCTION for the Connectionstyles table
 
         private bool ConnectionStyleExists(int id)
         {

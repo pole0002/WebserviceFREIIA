@@ -154,7 +154,7 @@ namespace FREIIA_API.Controllers
                 // changing zoneId to null in CONNECTIONS-table if a zone is deleted 
                 connectionsAsFirstZone.FirstZoneId = null;
                 // if there is only FirstZoneID that is NOT null, and all other FK is NULL, delete row
-                if (Connection.CountForeignKeys(connectionsAsFirstZone) == 1)
+                if (connectionsAsFirstZone.GetCountForeignKeys() == 1)
                 {
                     _context.Connections.Remove(connectionsAsFirstZone);
                 }
@@ -165,7 +165,7 @@ namespace FREIIA_API.Controllers
             {
                 connectionsAsSecondZone.SecondZoneId = null;
                 // if there is only SecondZoneId that is NOT null, and all other FK is NULL, delete row
-                if (Connection.CountForeignKeys(connectionsAsSecondZone) == 1)
+                if (connectionsAsSecondZone.GetCountForeignKeys() == 1)
                 {
                     _context.Connections.Remove(connectionsAsSecondZone);
                 }

@@ -190,7 +190,7 @@ namespace FREIIA_API.Controllers
                 {
                     connectionAsFirstParticipant.FirstParticipantId = null;
                     // if there is only FirstParticipantID that is NOT null, and all other FK is NULL, delete row
-                    if (Connection.CountForeignKeys(connectionAsFirstParticipant) == 1)
+                    if (connectionAsFirstParticipant.GetCountForeignKeys() == 1)
                     {
                         _context.Connections.Remove(connectionAsFirstParticipant);
                     }
@@ -200,7 +200,7 @@ namespace FREIIA_API.Controllers
                 {
                     connectionAsSecondParticipant.SecondParticipantId = null;
                     // if there is only FirstParticipantID that is NOT null, and all other FK is NULL, delete row
-                    if (Connection.CountForeignKeys(connectionAsSecondParticipant) == 1)
+                    if (connectionAsSecondParticipant.GetCountForeignKeys() == 1)
                     {
                         _context.Connections.Remove(connectionAsSecondParticipant);
                     }

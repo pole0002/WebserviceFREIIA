@@ -165,7 +165,7 @@ namespace FREIIA_API.Controllers
             {
                 connectionsAsFirstGroup.FirstGroupId = null;
                 // if there is only FirstGroupID that is NOT null, and all other FK is NULL, delete row
-                if (Connection.CountForeignKeys(connectionsAsFirstGroup) == 1)
+                if (connectionsAsFirstGroup.GetCountForeignKeys() == 1)
                 {
                     _context.Connections.Remove(connectionsAsFirstGroup);
                 }
@@ -176,7 +176,7 @@ namespace FREIIA_API.Controllers
             {
                 connectionsAsSecondGroup.SecondGroupId = null;
                 // if there is only SecondGroupID that is NOT null, and all other FK is NULL, delete row
-                if (Connection.CountForeignKeys(connectionsAsSecondGroup) == 1)
+                if (connectionsAsSecondGroup.GetCountForeignKeys() == 1)
                 {
                     _context.Connections.Remove(connectionsAsSecondGroup);
                 }

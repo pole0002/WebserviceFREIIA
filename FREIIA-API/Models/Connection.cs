@@ -26,31 +26,31 @@ namespace FREIIA_API.Models
 
 
         // Method for counting how many FK are left in connectionstable
-        public static int CountForeignKeys(Connection connection)
+        public int GetCountForeignKeys()
         {
             int count = 0;
 
-            if (connection.FirstZoneId != null)
+            if (FirstZoneId != null)
             {
                 count++;
             }
-            if (connection.SecondZoneId != null)
+            if (SecondZoneId != null)
             {
                 count++;
             }
-            if (connection.FirstGroupId != null)
+            if (FirstGroupId != null)
             {
                 count++;
             }
-            if (connection.SecondGroupId != null)
+            if (SecondGroupId != null)
             {
                 count++;
             }
-            if (connection.FirstParticipantId != null)
+            if (FirstParticipantId != null)
             {
                 count++;
             }
-            if (connection.SecondParticipantId != null)
+            if (SecondParticipantId != null)
             {
                 count++;
             }

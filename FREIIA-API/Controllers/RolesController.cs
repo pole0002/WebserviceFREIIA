@@ -106,6 +106,7 @@ namespace FREIIA_API.Controllers
             }
             var role = await _context.Roles.FindAsync(id);
             var defaultRoleValue = 7;
+
             if (role == null)
             {
                 return NotFound();

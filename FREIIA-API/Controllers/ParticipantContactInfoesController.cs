@@ -104,10 +104,21 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
-            var participantContactInfo = await _context.ParticipantContactInfos.FindAsync(id);
+            var participantContactInfo = _context.ParticipantContactInfos.FirstOrDefault(c => c.Id == id);
             if (participantContactInfo == null)
             {
                 return NotFound();
+            }
+            if (participantContactInfo != null)
+            {
+                //TODO: Här behöver vi nog ändra från en lista med contactinfo i participants till en vanlig property
+                // Getting a pist of participants who has this contactinfo ID
+                List<Participant> participants = _context.Participants.Where(p=>p.ContactInfo.Id == id).ToList();
+
+                foreach (Participant participant in participants)
+                {
+                    participant.ContactInfo = null;
+                }
             }
 
             _context.ParticipantContactInfos.Remove(participantContactInfo);

@@ -178,9 +178,9 @@ namespace FREIIA_API.Controllers
                     _context.ParticipantContactInfos.Remove(contactInfo);
                 }
 
-                // finds expertises connected to the specific participant
+                // finds participant connected to the specific expertises
                 var deleteExpertiseParticipantRow = _context.ExpertiseParticipant.Where(ep => ep.ParticipantId == id);
-                // deletes the connection of the expertise for a participant not the expertise itself
+                // deletes the row in Expertiseparticipant table
                 if (deleteExpertiseParticipantRow != null)
                 {
                     _context.ExpertiseParticipant.RemoveRange(deleteExpertiseParticipantRow);

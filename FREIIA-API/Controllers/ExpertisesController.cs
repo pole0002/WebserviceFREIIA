@@ -104,10 +104,19 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
-            var expertise = await _context.Expertises.FindAsync(id);
+            var expertise = _context.Expertises
+                .Include(e => e.ExpertiseParticipants)
+                .FirstOrDefault(e => e.Id == id);
             if (expertise == null)
             {
                 return NotFound();
+            }
+            // finds expertises connected to the specific participant
+            var deleteExpertiseParticipantRow = _context.ExpertiseParticipant.Where(ep => ep.ExpertiseId == id);
+            // deletes the row in Expertiseparticipant table
+            if (deleteExpertiseParticipantRow != null)
+            {
+                _context.ExpertiseParticipant.RemoveRange(deleteExpertiseParticipantRow);
             }
 
             _context.Expertises.Remove(expertise);

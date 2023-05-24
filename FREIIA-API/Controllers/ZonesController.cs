@@ -127,7 +127,7 @@ namespace FREIIA_API.Controllers
             .Include(p=>p.Participants)
             .Include(c1=>c1.ConnectionsAsFirstZone)
             .Include(c2 => c2.ConnectionsAsSecondZone)
-            .SingleOrDefault(g=> g.Id == id);
+            .SingleOrDefault(g=>g.Id == id);
             if (zone == null)
             {
                 return NotFound();

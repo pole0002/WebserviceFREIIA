@@ -168,7 +168,11 @@ namespace FREIIA_API.Controllers
                 .Include(c1=>c1.ConnectionsAsFirstParticipant)
                 .Include(c2=>c2.ConnectionsAsSecondParticipant)
                 .SingleOrDefault(p => p.Id == id);
-            if (participant != null)
+            if(participant == null)
+            {
+                return NotFound();
+            }
+            else if (participant != null)
             {
                 // puts contactinfo for participant in a separate variable
                 var contactInfo = participant.ContactInfo;

@@ -153,50 +153,51 @@ namespace FREIIA_API.Controllers
 
             //HACK: Kennys rekommendation, vet ej om det fungerar men testa.
 
-            //ParticipantsController participantController = new ParticipantsController(_context);
+            //ZonesController zonesController = new ZonesController(_context);
+            //await zonesController.DeleteZone(id);
 
             //GroupsController groupsController = new GroupsController(_context);
+            //await groupsController.DeleteGroup(id);
 
-            //ZonesController zoneController = new ZonesController(_context);
+            
 
-            //foreach (var participant in chart.Participants)
+            var participants = _context.Participants.Where(p => p.ChartId == id);
+
+            //LineStylesController lineStylesController = new LineStylesController(_context);
+            //await lineStylesController.DeleteLineStyle(id);
+            //ExpertisesController expertisesController = new ExpertisesController(_context);
+            //await expertisesController.DeleteExpertise(id);
+            //ColorsController colorsController = new ColorsController(_context);
+            //await colorsController.DeleteColor(id);
+            //RolesController rolesController = new RolesController(_context);
+            //await rolesController.DeleteRole(id);
+
+
+            //if (chart != null)
             //{
-            //    await participantController.DeleteParticipant(participant.Id);
-            //}
-
-            //foreach (var group in chart.Groups)
-            //{
-            //    await groupsController.DeleteGroup(group.Id);
-            //}
-
-            //var targetChart = _context.Charts.Include(c => c.Zones).Include(c => c.Groups).Include(c => c.Participants).SingleOrDefault(c => c.Id == chartId);
-            //if (targetChart != null)
-            //{
-            //    // Removes all zones
-            //    if (targetChart.Zones != null && targetChart.Zones.Count > 0)
+            //    if(chart.Zones != null)
             //    {
-            //        _context.Zones.RemoveRange(targetChart.Zones);
-            //    }
-
-            //    // Removes all groups
-            //    if (targetChart.Groups != null && targetChart.Groups.Count > 0)
-            //    {
-            //        _context.Groups.RemoveRange(targetChart.Groups);
-            //    }
-
-            //    // Removes all participants and their contact info
-            //    if (targetChart.Participants != null && targetChart.Participants.Count > 0)
-            //    {
-            //        foreach (var participant in targetChart.Participants)
+            //        foreach (var zone in chart.Zones)
             //        {
-            //            var contactInfo = participant.ContactInfo;
-            //            if (contactInfo != null)
-            //            {
-            //                _context.ParticipantContactInfos.Remove(contactInfo);
-            //            }
+            //            _context.Zones.Remove(zone);
             //        }
-            //        _context.Participants.RemoveRange(targetChart.Participants);
             //    }
+            //    if (chart.Groups != null)
+            //    {
+            //        foreach (var group in chart.Groups)
+            //        {
+            //           _context.Groups.Remove(group);
+            //        }
+            //    }
+            //    if(chart.Participants != null)
+            //    {
+            //        foreach (var participant in chart.Participants)
+            //        {
+            //            _context.Participants.Remove(participant);
+            //        }
+            //    }
+
+
             //}
             _context.Charts.Remove(chart);
             await _context.SaveChangesAsync();

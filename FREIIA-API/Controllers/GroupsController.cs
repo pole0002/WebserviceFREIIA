@@ -108,6 +108,11 @@ namespace FREIIA_API.Controllers
             {
                 return BadRequest("Group name is required.");
             }
+            // Validate colorId exists in @group
+            if (group.ColorId == 0)
+            {
+                return BadRequest("Color ID is required."); // Return appropriate response if ColorId is missing or invalid
+            }
 
             // Check if ZoneId is provided and validate the zone belongs to the same chart
             if (@group.ZoneId.HasValue)

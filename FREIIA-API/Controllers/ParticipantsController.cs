@@ -125,6 +125,11 @@ namespace FREIIA_API.Controllers
                 return NotFound(); // Or return any suitable response indicating chart not found
             }
 
+            if (participant.RoleId == null)
+            {
+                return BadRequest("null RoleId."); 
+            }
+
             // Check if GroupId is provided and validate the group belongs to the same chart
             if (participant.GroupId.HasValue)
             {

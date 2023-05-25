@@ -103,12 +103,19 @@ namespace FREIIA_API.Controllers
             //gets complete chartobject via the recieved int chartId in the function head. see helper method GetChartById for logic
             Chart chart = requests.GetChartById(chartId);
 
-            //essentially if chart EXISTS then add the recieved Zone zone to the list of Zones in the chart object.
-            if (chart != null)
+            // Return appropriate response if ColorId is missing or invalid
+            if (chart == null)
+            {
+                return BadRequest("could not find chart associated with chartID."); 
+            }
+
+            //essentially if chart EXISTS etc then add the recieved Zone zone to the list of Zones in the chart object.
+            if (chart != null && zone.ColorId != 0 && zone.Name != null)
             {
                 chart.Zones.Add(zone);
                 await requests.SaveChartAsync(chart);
             }
+
 
             return CreatedAtAction("GetZone", new { id = zone.Id }, zone);
         }

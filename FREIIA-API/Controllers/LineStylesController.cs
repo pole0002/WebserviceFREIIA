@@ -109,6 +109,17 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
+            if (lineStyle != null)
+            {
+                //Defining the linestyleid in the ConnectionStyles Table and matching it the StyleId
+                var connectionStyle = _context.ConnectionStyles
+                    .FirstOrDefault(cs=>cs.LineStyle == lineStyle);
+                if(connectionStyle != null)
+                {
+                    _context.ConnectionStyles.Remove(connectionStyle);
+                }
+
+            }
 
             _context.LineStyles.Remove(lineStyle);
             await _context.SaveChangesAsync();

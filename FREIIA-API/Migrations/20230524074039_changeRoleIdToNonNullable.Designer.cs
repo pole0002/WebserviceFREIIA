@@ -4,6 +4,7 @@ using FREIIA_API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FREIIA_API.Migrations
 {
     [DbContext(typeof(FREIIAContext))]
-    partial class FREIIAContextModelSnapshot : ModelSnapshot
+    [Migration("20230524074039_changeRoleIdToNonNullable")]
+    partial class changeRoleIdToNonNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +45,7 @@ namespace FREIIA_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Charts", (string)null);
+                    b.ToTable("Charts");
                 });
 
             modelBuilder.Entity("FREIIA_API.Models.Color", b =>
@@ -67,7 +69,7 @@ namespace FREIIA_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Colors", (string)null);
+                    b.ToTable("Colors");
                 });
 
             modelBuilder.Entity("FREIIA_API.Models.Connection", b =>
@@ -119,7 +121,7 @@ namespace FREIIA_API.Migrations
 
                     b.HasIndex("SecondZoneId");
 
-                    b.ToTable("Connections", (string)null);
+                    b.ToTable("Connections");
                 });
 
             modelBuilder.Entity("FREIIA_API.Models.ConnectionStyle", b =>
@@ -146,7 +148,7 @@ namespace FREIIA_API.Migrations
 
                     b.HasIndex("LineStyleId");
 
-                    b.ToTable("ConnectionStyles", (string)null);
+                    b.ToTable("ConnectionStyles");
                 });
 
             modelBuilder.Entity("FREIIA_API.Models.Expertise", b =>
@@ -174,7 +176,7 @@ namespace FREIIA_API.Migrations
 
                     b.HasIndex("ColorId");
 
-                    b.ToTable("Expertises", (string)null);
+                    b.ToTable("Expertises");
                 });
 
             modelBuilder.Entity("FREIIA_API.Models.ExpertiseParticipant", b =>
@@ -192,7 +194,7 @@ namespace FREIIA_API.Migrations
 
                     b.HasIndex("ParticipantId");
 
-                    b.ToTable("ExpertiseParticipant", (string)null);
+                    b.ToTable("ExpertiseParticipant");
                 });
 
             modelBuilder.Entity("FREIIA_API.Models.Group", b =>
@@ -227,7 +229,7 @@ namespace FREIIA_API.Migrations
 
                     b.HasIndex("ZoneId");
 
-                    b.ToTable("Groups", (string)null);
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("FREIIA_API.Models.LineStyle", b =>
@@ -244,7 +246,7 @@ namespace FREIIA_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LineStyles", (string)null);
+                    b.ToTable("LineStyles");
                 });
 
             modelBuilder.Entity("FREIIA_API.Models.Participant", b =>
@@ -296,7 +298,7 @@ namespace FREIIA_API.Migrations
 
                     b.HasIndex("ZoneId");
 
-                    b.ToTable("Participants", (string)null);
+                    b.ToTable("Participants");
                 });
 
             modelBuilder.Entity("FREIIA_API.Models.ParticipantContactInfo", b =>
@@ -315,7 +317,7 @@ namespace FREIIA_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ParticipantContactInfos", (string)null);
+                    b.ToTable("ParticipantContactInfos");
                 });
 
             modelBuilder.Entity("FREIIA_API.Models.Role", b =>
@@ -343,7 +345,7 @@ namespace FREIIA_API.Migrations
 
                     b.HasIndex("ColorId");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("FREIIA_API.Models.Zone", b =>
@@ -370,7 +372,7 @@ namespace FREIIA_API.Migrations
 
                     b.HasIndex("ColorId");
 
-                    b.ToTable("Zones", (string)null);
+                    b.ToTable("Zones");
                 });
 
             modelBuilder.Entity("FREIIA_API.Models.Connection", b =>

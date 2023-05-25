@@ -173,7 +173,11 @@ namespace FREIIA_API.Controllers
                 .Include(c1=>c1.ConnectionsAsFirstParticipant)
                 .Include(c2=>c2.ConnectionsAsSecondParticipant)
                 .SingleOrDefault(p => p.Id == id);
-            if (participant != null)
+            if(participant == null)
+            {
+                return NotFound();
+            }
+            else if (participant != null)
             {
                 // puts contactinfo for participant in a separate variable
                 var contactInfo = participant.ContactInfo;
@@ -183,9 +187,9 @@ namespace FREIIA_API.Controllers
                     _context.ParticipantContactInfos.Remove(contactInfo);
                 }
 
-                // finds expertises connected to the specific participant
+                // finds participant connected to the specific expertises
                 var deleteExpertiseParticipantRow = _context.ExpertiseParticipant.Where(ep => ep.ParticipantId == id);
-                // deletes the connection of the expertise for a participant not the expertise itself
+                // deletes the row in Expertiseparticipant table
                 if (deleteExpertiseParticipantRow != null)
                 {
                     _context.ExpertiseParticipant.RemoveRange(deleteExpertiseParticipantRow);
@@ -195,7 +199,7 @@ namespace FREIIA_API.Controllers
                 {
                     connectionAsFirstParticipant.FirstParticipantId = null;
                     // if there is only FirstParticipantID that is NOT null, and all other FK is NULL, delete row
-                    if (Connection.CountForeignKeys(connectionAsFirstParticipant) == 1)
+                    if (connectionAsFirstParticipant.GetCountForeignKeys() == 1)
                     {
                         _context.Connections.Remove(connectionAsFirstParticipant);
                     }
@@ -205,7 +209,7 @@ namespace FREIIA_API.Controllers
                 {
                     connectionAsSecondParticipant.SecondParticipantId = null;
                     // if there is only FirstParticipantID that is NOT null, and all other FK is NULL, delete row
-                    if (Connection.CountForeignKeys(connectionAsSecondParticipant) == 1)
+                    if (connectionAsSecondParticipant.GetCountForeignKeys() == 1)
                     {
                         _context.Connections.Remove(connectionAsSecondParticipant);
                     }

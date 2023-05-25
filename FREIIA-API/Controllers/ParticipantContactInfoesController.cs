@@ -104,10 +104,13 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
-            var participantContactInfo = await _context.ParticipantContactInfos.FindAsync(id);
-            if (participantContactInfo == null)
+            var participantContactInfo = _context.ParticipantContactInfos.FirstOrDefault(c => c.Id == id);
+
+            if(participantContactInfo != null)
             {
-                return NotFound();
+                var participant = await _context.Participants.Where(p => p.ContactInfo.Id == id).FirstAsync();
+
+                participant.ContactInfo = null;
             }
 
             _context.ParticipantContactInfos.Remove(participantContactInfo);

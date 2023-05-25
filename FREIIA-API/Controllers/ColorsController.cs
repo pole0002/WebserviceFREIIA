@@ -15,6 +15,7 @@ namespace FREIIA_API.Controllers
     [ApiController]
     public class ColorsController : ControllerBase
     {
+        private readonly int _defaultColorId = 8;
         private readonly FREIIAContext _context;
 
         public ColorsController(FREIIAContext context)
@@ -140,6 +141,42 @@ namespace FREIIA_API.Controllers
             if (color == null)
             {
                 return NotFound();
+            }
+            if (color != null)
+            {
+                //Defining the colorid in the ConnectionStyles Table and matching it the ColorId
+                var connectionStyle = _context.ConnectionStyles
+                    .FirstOrDefault(cs => cs.Color == color);
+                if (connectionStyle != null)
+                {
+                    _context.ConnectionStyles.Remove(connectionStyle);
+                }
+                // We will change all Roles that have this colorID to default
+                var rolesToUpdate = _context.Roles.Where(r => r.ColorId == id);
+                foreach (var role in rolesToUpdate)
+                {
+                    role.ColorId = _defaultColorId;
+                }
+
+                // We will change all Groups that have this colorID to default
+                var groupsToUpdate = _context.Groups.Where(g => g.ColorId == id);
+                foreach (var group in groupsToUpdate)
+                {
+                    group.ColorId = _defaultColorId;
+                }
+
+                // We will change all Zones that have this colorID to default
+                var zonesToUpdate = _context.Zones.Where(z => z.ColorId == id);
+                foreach (var zone in zonesToUpdate)
+                {
+                    zone.ColorId = _defaultColorId;
+                }
+                // We will change all Expertise that have this colorID to default
+                var expertiseToUpdate = _context.Expertises.Where(e => e.ColorId == id);
+                foreach (var expertise in expertiseToUpdate)
+                {
+                    expertise.ColorId = _defaultColorId;
+                }
             }
 
             _context.Colors.Remove(color);

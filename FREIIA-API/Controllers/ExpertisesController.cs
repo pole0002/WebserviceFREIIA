@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FREIIA_API.Data;
 using FREIIA_API.Models;
+using System.Security.Cryptography.X509Certificates;
 
 namespace FREIIA_API.Controllers
 {
@@ -104,10 +105,39 @@ namespace FREIIA_API.Controllers
             {
                 return NotFound();
             }
-            var expertise = await _context.Expertises.FindAsync(id);
+            Expertise expertise = _context.Expertises
+                .Include(e => e.ExpertiseParticipants)
+                .ThenInclude(p=>p.Participant)
+                .FirstOrDefault(e => e.Id == id);
             if (expertise == null)
             {
                 return NotFound();
+            }
+
+            if(expertise != null)
+            {
+                // defining that expertiseId is same as the expertise Id in the Expertise Table
+                ExpertiseParticipant expertiseParticipantExpertiseId = expertise.ExpertiseParticipants
+                    .FirstOrDefault(ep => ep.ExpertiseId == id);
+
+                if(expertiseParticipantExpertiseId != null)
+                {
+                    // getting the participantID of the expertise
+                    int participantId = expertiseParticipantExpertiseId.ParticipantId;
+
+                    // find the next added expertise for participant
+                    ExpertiseParticipant nextExpertiseParticipantExpertiseId = _context.ExpertiseParticipant
+                        .Where(ep => ep.ParticipantId == participantId && ep.ExpertiseId != id)
+                        .OrderBy(ep => ep.ExpertiseId)
+                        .FirstOrDefault();
+
+                    if(nextExpertiseParticipantExpertiseId != null)
+                    {
+                        // change isMainExpertise for the experticeparticipantrow of the next expertise in the list for thesame participant
+                        nextExpertiseParticipantExpertiseId.IsMainExpertise = true;
+
+                    }
+                }
             }
 
             _context.Expertises.Remove(expertise);
@@ -115,7 +145,7 @@ namespace FREIIA_API.Controllers
 
             return NoContent();
         }
-
+        
         private bool ExpertiseExists(int id)
         {
             return (_context.Expertises?.Any(e => e.Id == id)).GetValueOrDefault();

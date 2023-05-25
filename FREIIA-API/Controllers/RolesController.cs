@@ -14,6 +14,7 @@ namespace FREIIA_API.Controllers
     [ApiController]
     public class RolesController : ControllerBase
     {
+        private readonly int _defaultRoleId = 7;
         private readonly FREIIAContext _context;
 
         public RolesController(FREIIAContext context)
@@ -105,26 +106,32 @@ namespace FREIIA_API.Controllers
                 return NotFound();
             }
             var role = await _context.Roles.FindAsync(id);
+
             if (role == null)
             {
                 return NotFound();
             }
+            // using the defined field variable of the default value when deleting a role
+            else if(role.Id == _defaultRoleId)
+            {
+                return BadRequest("Cannot delete the default value");
+            }
             else if (role != null)
             {
+                
                 // Getting a list of participants who has this role ID
                 List<Participant> participants = _context.Participants.Where(p => p.RoleId == id).ToList();
 
-                // We will update all participants from the list from the chosen roleID to null (cannot set to null due to that it is an integer, not a string)
-                foreach (Participant participant in participants)
+                
+                // We will update all participants from the list from the chosen roleID to 7 
+                foreach (var participant in participants)
                 {
-                    participant.RoleId = null;
-                }
-
-
-
-                _context.Roles.Remove(role);
+                    participant.RoleId = _defaultRoleId;
+                   
+                }   
             }
-                await _context.SaveChangesAsync();
+            _context.Roles.Remove(role);
+            await _context.SaveChangesAsync();
             
             return NoContent();    
         }
